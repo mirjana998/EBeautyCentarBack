@@ -1,0 +1,51 @@
+package com.example.ebeautycentar.service;
+
+
+import com.example.ebeautycentar.dto.RezervacijaDto;
+import com.example.ebeautycentar.entity.Rezervacija;
+import com.example.ebeautycentar.repository.RezervacijaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class RezervacijaService {
+
+    @Autowired
+    private final RezervacijaRepository rezervacijaRepository;
+
+    @Autowired
+    public RezervacijaService(RezervacijaRepository rezervacijaRepository) {
+        this.rezervacijaRepository = rezervacijaRepository;
+    }
+
+    public List<RezervacijaDto> getAllRezervacija() {
+        List<Rezervacija> rezervacijaList = rezervacijaRepository.findAll();
+        List<RezervacijaDto> rezervacijaDtoList = new ArrayList<>();
+        for(Rezervacija rezervacija : rezervacijaList) {
+            rezervacijaDtoList.add(new RezervacijaDto(rezervacija));
+        }
+        return rezervacijaDtoList;
+    }
+
+
+    public Optional<Rezervacija> getRezervacijaById(Long id) {
+        return rezervacijaRepository.findById(id);
+    }
+
+
+    public Rezervacija saveRezervacija(Rezervacija rezervacija) {
+        return rezervacijaRepository.save(rezervacija);
+    }
+
+    public void deleteRezevacija(Long id) {
+        rezervacijaRepository.deleteById(id);
+    }
+
+    public List<Rezervacija> findByStatusAktivan(String status) {
+        return rezervacijaRepository.findByStatus("A");
+    }
+}

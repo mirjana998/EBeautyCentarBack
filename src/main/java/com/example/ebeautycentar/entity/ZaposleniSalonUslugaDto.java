@@ -1,0 +1,62 @@
+package com.example.ebeautycentar.entity;
+
+import com.example.ebeautycentar.dto.ZaposleniSalonUslugaIdDto;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * DTO for {@link ZaposleniSalonUsluga}
+ */
+public class ZaposleniSalonUslugaDto implements Serializable {
+    private final ZaposleniSalonUslugaIdDto id;
+    private final Long zaposleniId;
+    private final Long salonUslugaId;
+
+    public ZaposleniSalonUslugaDto(ZaposleniSalonUslugaIdDto id, Long zaposleniId, Long salonUslugaId) {
+        this.id = id;
+        this.zaposleniId = zaposleniId;
+        this.salonUslugaId = salonUslugaId;
+    }
+
+    public ZaposleniSalonUslugaDto(ZaposleniSalonUsluga zaposleniSalonUsluga) {
+        this.id = new ZaposleniSalonUslugaIdDto(zaposleniSalonUsluga.getId());
+        this.zaposleniId = zaposleniSalonUsluga.getZaposleni().getId();
+        this.salonUslugaId = zaposleniSalonUsluga.getSalonUsluga().getId();
+    }
+
+    public ZaposleniSalonUslugaIdDto getId() {
+        return id;
+    }
+
+    public Long getZaposleniId() {
+        return zaposleniId;
+    }
+
+    public Long getSalonUslugaId() {
+        return salonUslugaId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ZaposleniSalonUslugaDto entity = (ZaposleniSalonUslugaDto) o;
+        return Objects.equals(this.id, entity.id) &&
+                Objects.equals(this.zaposleniId, entity.zaposleniId) &&
+                Objects.equals(this.salonUslugaId, entity.salonUslugaId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, zaposleniId, salonUslugaId);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "zaposleniId = " + zaposleniId + ", " +
+                "salonUslugaId = " + salonUslugaId + ")";
+    }
+}
