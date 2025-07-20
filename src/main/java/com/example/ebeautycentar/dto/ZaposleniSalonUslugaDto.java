@@ -1,6 +1,6 @@
-package com.example.ebeautycentar.entity;
+package com.example.ebeautycentar.dto;
 
-import com.example.ebeautycentar.dto.ZaposleniSalonUslugaIdDto;
+import com.example.ebeautycentar.entity.ZaposleniSalonUsluga;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -42,4 +42,10 @@ public class LokacijaController {
         lokacijaService.deleteLokacija(id);
         return ResponseEntity.ok("OBRISAN!");
     }
+
+    @GetMapping("/gradovi")
+    public ResponseEntity<List<String>> getSviGradovi() {
+        List<String> gradovi = lokacijaService.getSviGradovi();
+        return ResponseEntity.ok(gradovi);
+    }
 }

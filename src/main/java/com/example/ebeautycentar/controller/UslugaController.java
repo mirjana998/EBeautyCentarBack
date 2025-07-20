@@ -37,4 +37,9 @@ public class UslugaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/nazivi")
+    public ResponseEntity<List<String>> getSveNaziveUsluga() {
+        return ResponseEntity.ok(uslugaService.getSveUsluge());
+    }
 }
