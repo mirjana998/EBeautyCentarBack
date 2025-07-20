@@ -1,6 +1,7 @@
 package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.dto.NovostDto;
+import com.example.ebeautycentar.dto.SalonDto;
 import com.example.ebeautycentar.entity.Novost;
 import com.example.ebeautycentar.service.NovostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,14 @@ public class NovostController {
     public ResponseEntity<String> deleteNovost(@PathVariable Long id) {
         novostService.deleteNovost(id);
         return ResponseEntity.ok("OBRISAN!");
+    }
+
+    @GetMapping("/salon")
+    public ResponseEntity<List<NovostDto>> getSalonNovosti(@RequestParam Long id) {
+        List<NovostDto> novosti = novostService.findBySalonId(id);
+        if (novosti.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else
+            return ResponseEntity.ok(novosti);
     }
 }

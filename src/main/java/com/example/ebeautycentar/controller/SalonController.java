@@ -25,8 +25,12 @@ public class SalonController {
     }
 
     @GetMapping
-    public List<SalonDto> getAllSalon() {
-        return salonService.getAllSalon();
+    public ResponseEntity<List<SalonDto>> getAllSalon() {
+        List<SalonDto>saloni=salonService.getAllSalon();
+        if (saloni.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(saloni);
     }
 
     @GetMapping("/{id}")
@@ -110,6 +114,18 @@ public class SalonController {
                 return ResponseEntity.noContent().build();
             }
             return ResponseEntity.ok(saloni);
+        }
+    }
+
+    @GetMapping("/popularni")
+    public ResponseEntity<List<SalonDto>> getPopularniSaloni() {
+        List<SalonDto>saloni=salonService.getPopularniSaloni();
+        if (saloni.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }else if(saloni.size()<4) {
+            return ResponseEntity.ok(saloni);
+        }else {
+            return ResponseEntity.ok(saloni.subList(0,4));
         }
     }
 }
