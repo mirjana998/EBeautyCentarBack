@@ -86,4 +86,17 @@ public interface SalonRepository extends JpaRepository<Salon, Long> {
     WHERE l.grad=:grad AND u.naziv = :usluga AND s.naziv like :naziv AND s.status= :status
     """, nativeQuery = true)
     List<Salon>findByGradAndUslugaAndNaziv(@Param("grad") String grad,@Param("usluga") String usluga, @Param("naziv") String naziv,@Param("status") String status);
+
+    @Query(value = """
+    select sal.id, sal.naziv, sal.email, sal.broj_telefona, sal.tip_id, sal.datum_otvaranja, sal.status, sal.datum_zatvaranja, sal.vlasnik_salona_id, sal.lokacija_id from
+     (select s.*, count(r.id) as c
+        from salon s
+        join salon_usluga su ON su.salon_id = s.id
+        join rezervacija r ON r.salon_usluga_id = su.id
+        where r.status = :status_r and s.status= :status_s
+        group by 1) as sal
+        order by sal.c desc
+    """, nativeQuery = true)
+    List<Salon>findPopularni(@Param("status_r") String statusR, @Param("status_s") String statusS);
+
 }

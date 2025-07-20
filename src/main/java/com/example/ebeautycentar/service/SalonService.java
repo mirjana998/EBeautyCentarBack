@@ -26,7 +26,7 @@ public class SalonService {
     }
 
     public List<SalonDto> getAllSalon() {
-        List<Salon> salonList = salonRepository.findAll();
+        List<Salon> salonList = salonRepository.findByStatus("A");
         List<SalonDto> salonDtoList = new ArrayList<>();
         for(Salon salon : salonList) {
             salonDtoList.add(new SalonDto(salon));
@@ -96,6 +96,14 @@ public class SalonService {
     public List<SalonDto>getSaloniByGradAndUslugaAndNaziv(String grad,String usluga,String naziv)
     {
         List<Salon>saloni=salonRepository.findByGradAndUslugaAndNaziv(grad,usluga,"%"+naziv+"%","A");
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<SalonDto>getPopularniSaloni()
+    {
+        List<Salon>saloni=salonRepository.findPopularni("I", "A");
         return saloni.stream()
                 .map(SalonDto::new)
                 .collect(Collectors.toList());
