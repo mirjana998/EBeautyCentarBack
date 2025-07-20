@@ -15,6 +15,7 @@ public class SlikaDto implements Serializable {
     private final String vrsta;
     private final Long uslugaId;
     private final String status;
+    private final byte[] slika;
 
     public SlikaDto(Slika slika) {
         this.id = slika.getId();
@@ -23,6 +24,7 @@ public class SlikaDto implements Serializable {
         this.vrsta = slika.getVrsta();
         this.uslugaId = slika.getUsluga().getId();
         this.status = slika.getStatus();
+        this.slika = slika.getSlika();
     }
 
     public Long getId() {
@@ -49,6 +51,11 @@ public class SlikaDto implements Serializable {
         return status;
     }
 
+    public byte[] getSlika() {
+        return slika;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,12 +66,13 @@ public class SlikaDto implements Serializable {
                 Objects.equals(this.salonId, entity.salonId) &&
                 Objects.equals(this.vrsta, entity.vrsta) &&
                 Objects.equals(this.uslugaId, entity.uslugaId) &&
-                Objects.equals(this.status, entity.status);
+                Objects.equals(this.status, entity.status)&&
+                Objects.equals(this.slika, entity.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, naziv, salonId, vrsta, uslugaId, status);
+        return Objects.hash(id, naziv, salonId, vrsta, uslugaId, status,slika);
     }
 
     @Override
@@ -75,6 +83,7 @@ public class SlikaDto implements Serializable {
                 "salonId = " + salonId + ", " +
                 "vrsta = " + vrsta + ", " +
                 "uslugaId = " + uslugaId + ", " +
-                "status = " + status + ")";
+                "status = " + status +
+                "slika= "+slika+")";
     }
 }

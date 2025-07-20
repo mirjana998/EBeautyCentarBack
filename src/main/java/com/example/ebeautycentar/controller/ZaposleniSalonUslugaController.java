@@ -1,7 +1,7 @@
 package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.entity.ZaposleniSalonUsluga;
-import com.example.ebeautycentar.entity.ZaposleniSalonUslugaDto;
+import com.example.ebeautycentar.dto.ZaposleniSalonUslugaDto;
 import com.example.ebeautycentar.service.ZaposleniSalonUslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

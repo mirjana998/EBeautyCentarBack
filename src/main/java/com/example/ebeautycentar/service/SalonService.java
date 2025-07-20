@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SalonService {
@@ -49,16 +50,54 @@ public class SalonService {
         return salonRepository.findByStatus("A");
     }
 
-    /*
-    public Bicycle updateBicycle(Integer id, Bicycle bicycle) {
-        Optional<Bicycle> existingBicycle = bicycleRepository.findById(id);
-        Bicycle b = new Bicycle();
-        if (existingBicycle.isPresent()) {
-            b.setId(bicycle.getId());
-            b.setVehicle(bicycle.getVehicle());
-            b.setAutonomy(bicycle.getAutonomy());
-        }
-        return bicycleRepository.save(b);
+    public List<SalonDto> getSaloniByLokacijaIUsluga(String grad, String usluga) {
+        List<Salon> saloni = salonRepository.findByGradAndUsluga(grad, usluga,"A");
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
     }
-    */
+    public List<SalonDto> findByNazivAndStatus(String naziv,String status) {
+        List<Salon> saloni = salonRepository.findByNazivLikeAndStatusLike(naziv,status);
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<SalonDto> findByGradAndStatus(String grad,String status)
+    {
+        List<Salon> saloni = salonRepository.findByGradAndStatus(grad,status);
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<SalonDto> getSaloniByGradINaziv(String grad, String naziv) {
+        List<Salon> saloni = salonRepository.findByGradAndNaziv(grad, "%"+naziv+"%","A");
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<SalonDto>findByUslugaAndStatus(String usluga,String status)
+    {
+        List<Salon> saloni=salonRepository.findByUslugaAndStatus(usluga,status);
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<SalonDto>getSaloniByUslugaAndNaziv(String usluga,String naziv)
+    {
+        List<Salon>saloni=salonRepository.findByUslugaAndNaziv(usluga,"%"+naziv+"%","A");
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
+    public List<SalonDto>getSaloniByGradAndUslugaAndNaziv(String grad,String usluga,String naziv)
+    {
+        List<Salon>saloni=salonRepository.findByGradAndUslugaAndNaziv(grad,usluga,"%"+naziv+"%","A");
+        return saloni.stream()
+                .map(SalonDto::new)
+                .collect(Collectors.toList());
+    }
 }

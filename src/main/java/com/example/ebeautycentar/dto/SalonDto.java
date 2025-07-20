@@ -17,24 +17,24 @@ public class SalonDto implements Serializable {
     private final String naziv;
     private final String email;
     private final String brojTelefona;
-    private final Tip tip;
+    private final TipDto tip;
     private final LocalDate datumOtvaranja;
     private final String status;
     private final LocalDate datumZatvaranja;
-    private final VlasnikSalona vlasnikSalona;
-    private final Lokacija lokacija;
+    private final VlasnikSalonaDto vlasnikSalona;
+    private final LokacijaDto lokacija;
 
     public SalonDto(Salon salon) {
         this.id = salon.getId();
         this.naziv = salon.getNaziv();
         this.email = salon.getEmail();
         this.brojTelefona = salon.getBrojTelefona();
-        this.tip = salon.getTip();
+        this.tip = new TipDto(salon.getTip());
         this.datumOtvaranja = salon.getDatumOtvaranja();
         this.status = salon.getStatus();
         this.datumZatvaranja = salon.getDatumZatvaranja();
-        this.lokacija = salon.getLokacija();
-        this.vlasnikSalona = salon.getVlasnikSalona();
+        this.lokacija = new LokacijaDto(salon.getLokacija());
+        this.vlasnikSalona = new VlasnikSalonaDto(salon.getVlasnikSalona());
     }
 
 
@@ -54,7 +54,7 @@ public class SalonDto implements Serializable {
         return brojTelefona;
     }
 
-    public Tip getTip() {
+    public TipDto getTip() {
         return tip;
     }
 
@@ -70,11 +70,11 @@ public class SalonDto implements Serializable {
         return datumZatvaranja;
     }
 
-    public VlasnikSalona getVlasnikSalona() {
+    public VlasnikSalonaDto getVlasnikSalona() {
         return vlasnikSalona;
     }
 
-    public Lokacija getLokacija() {
+    public LokacijaDto getLokacija() {
         return lokacija;
     }
 

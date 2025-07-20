@@ -3,12 +3,14 @@ package com.example.ebeautycentar.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "salon_usluga")
 public class SalonUsluga {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -24,7 +26,7 @@ public class SalonUsluga {
     private LocalDate datumPocetka;
 
     @Column(name = "trajanje_usluge", nullable = false)
-    private Integer trajanjeUsluge;
+    private Instant trajanjeUsluge;
 
     @Column(name = "datum_kraja")
     private LocalDate datumKraja;
@@ -71,11 +73,11 @@ public class SalonUsluga {
         this.datumPocetka = datumPocetka;
     }
 
-    public Integer getTrajanjeUsluge() {
+    public Instant getTrajanjeUsluge() {
         return trajanjeUsluge;
     }
 
-    public void setTrajanjeUsluge(Integer trajanjeUsluge) {
+    public void setTrajanjeUsluge(Instant trajanjeUsluge) {
         this.trajanjeUsluge = trajanjeUsluge;
     }
 

@@ -48,4 +48,8 @@ public class UslugaService {
     public List<Usluga> findByStatusAktivan(String status) {
         return uslugaRepository.findByStatus("A");
     }
+
+    public List<String> getSveUsluge() {
+        return uslugaRepository.findDistinctNaziv();
+    }
 }

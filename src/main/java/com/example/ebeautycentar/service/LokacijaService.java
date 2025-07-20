@@ -45,4 +45,8 @@ public class LokacijaService {
         lokacijaRepository.deleteById(id);
     }
 
+    public List<String> getSviGradovi() {
+        return lokacijaRepository.findDistinctGrad();
+    }
+
 }

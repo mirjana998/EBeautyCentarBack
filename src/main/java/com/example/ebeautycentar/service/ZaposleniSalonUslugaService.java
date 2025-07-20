@@ -2,7 +2,7 @@ package com.example.ebeautycentar.service;
 
 
 import com.example.ebeautycentar.entity.ZaposleniSalonUsluga;
-import com.example.ebeautycentar.entity.ZaposleniSalonUslugaDto;
+import com.example.ebeautycentar.dto.ZaposleniSalonUslugaDto;
 import com.example.ebeautycentar.repository.ZaposleniSalonUslugaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

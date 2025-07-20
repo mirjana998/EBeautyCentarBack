@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "slika")
 public class Slika {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -28,6 +29,10 @@ public class Slika {
     @ColumnDefault("'A'")
     @Column(name = "status", nullable = false, length = 1)
     private String status;
+
+    @Lob
+    @Column(name = "slika")
+    private byte[] slika;
 
     public Long getId() {
         return id;
@@ -75,6 +80,14 @@ public class Slika {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public byte[] getSlika() {
+        return slika;
+    }
+
+    public void setSlika(byte[] slika) {
+        this.slika = slika;
     }
 
 }
