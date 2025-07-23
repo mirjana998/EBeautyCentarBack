@@ -1,7 +1,6 @@
 package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.dto.NovostDto;
-import com.example.ebeautycentar.dto.SalonDto;
 import com.example.ebeautycentar.entity.Novost;
 import com.example.ebeautycentar.service.NovostService;
 import org.springframework.beans.factory.annotation.Autowired;

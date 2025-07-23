@@ -38,4 +38,15 @@ public class OcjenaPruzeneUslugeController {
         }
     }
 
+    @GetMapping("/salon")
+    public ResponseEntity<List<OcjenaPruzeneUslugeDto>> getOcjenaPruzeneUslugeBySalonId(@RequestParam Long id) {
+       List<OcjenaPruzeneUslugeDto> ocjene = ocjenaPruzeneUslugeService.getAllOcjenaPruzeneUslugeBySalonId(id);
+       if(ocjene.isEmpty()) {
+           return ResponseEntity.noContent().build();
+       }
+       return ResponseEntity.ok(ocjene);
+    }
+
+
+
 }

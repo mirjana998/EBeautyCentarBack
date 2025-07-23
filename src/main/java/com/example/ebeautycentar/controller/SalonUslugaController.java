@@ -23,7 +23,7 @@ public class SalonUslugaController {
     }
 
     @GetMapping
-    public List<SalonUslugaDto> getAllKorisnik() {
+    public List<SalonUslugaDto> getAllSalonUsluga() {
         return salonUslugaService.getAllSalonUsluga();
     }
 
@@ -37,4 +37,14 @@ public class SalonUslugaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/salon")
+    public ResponseEntity<List<SalonUslugaDto>> getSalonUslugaBySalonId(@RequestParam Long id) {
+       List<SalonUslugaDto> salonUsluge = salonUslugaService.getSalonUslugaBySalonId(id);
+        if(salonUsluge.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }return ResponseEntity.ok(salonUsluge);
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.example.ebeautycentar.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -43,6 +44,18 @@ public class Salon {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lokacija_id", nullable = false)
     private Lokacija lokacija;
+
+    @ColumnDefault("0.00")
+    @Column(name = "prosjecna_ocjena", nullable = false, precision = 6, scale = 2)
+    private BigDecimal prosjecnaOcjena;
+
+    public BigDecimal getProsjecnaOcjena() {
+        return prosjecnaOcjena;
+    }
+
+    public void setProsjecnaOcjena(BigDecimal prosjecnaOcjena) {
+        this.prosjecnaOcjena = prosjecnaOcjena;
+    }
 
     public Long getId() {
         return id;
@@ -123,5 +136,7 @@ public class Salon {
     public void setLokacija(Lokacija lokacija) {
         this.lokacija = lokacija;
     }
+
+
 
 }

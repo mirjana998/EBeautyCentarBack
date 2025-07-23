@@ -4,6 +4,7 @@ import com.example.ebeautycentar.dto.OcjenaPruzeneUslugeDto;
 import com.example.ebeautycentar.entity.OcjenaPruženeUsluge;
 import com.example.ebeautycentar.repository.OcjenaPruženeUslugeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,15 @@ public class OcjenaPruzeneUslugeService {
             ocjenaPruženeUslugeDtoList.add(new OcjenaPruzeneUslugeDto(ocjenaPruženeUsluge));
         }
         return ocjenaPruženeUslugeDtoList;
+    }
+
+    public List<OcjenaPruzeneUslugeDto> getAllOcjenaPruzeneUslugeBySalonId(Long salonId) {
+        List<OcjenaPruženeUsluge> ocjene = ocjenaPruženeUslugeRepository.findAllBySalonId(salonId);
+        List<OcjenaPruzeneUslugeDto> ocjeneDto  = new ArrayList<>();
+        for(OcjenaPruženeUsluge o : ocjene) {
+            ocjeneDto.add(new OcjenaPruzeneUslugeDto(o));
+        }
+        return ocjeneDto;
     }
 
 

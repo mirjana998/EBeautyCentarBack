@@ -6,6 +6,7 @@ import com.example.ebeautycentar.entity.Tip;
 import com.example.ebeautycentar.entity.VlasnikSalona;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -23,6 +24,8 @@ public class SalonDto implements Serializable {
     private final LocalDate datumZatvaranja;
     private final VlasnikSalonaDto vlasnikSalona;
     private final LokacijaDto lokacija;
+    private BigDecimal prosjecnaOcjena;
+
 
     public SalonDto(Salon salon) {
         this.id = salon.getId();
@@ -35,6 +38,7 @@ public class SalonDto implements Serializable {
         this.datumZatvaranja = salon.getDatumZatvaranja();
         this.lokacija = new LokacijaDto(salon.getLokacija());
         this.vlasnikSalona = new VlasnikSalonaDto(salon.getVlasnikSalona());
+        this.prosjecnaOcjena = salon.getProsjecnaOcjena();
     }
 
 
@@ -78,6 +82,14 @@ public class SalonDto implements Serializable {
         return lokacija;
     }
 
+    public void setProsjecnaOcjena(BigDecimal prosjecnaOcjena) {
+        this.prosjecnaOcjena = prosjecnaOcjena;
+    }
+
+    public BigDecimal getProsjecnaOcjena() {
+        return prosjecnaOcjena;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,6 +124,9 @@ public class SalonDto implements Serializable {
                 "status = " + status + ", " +
                 "datumZatvaranja = " + datumZatvaranja + ", " +
                 "vlasnikSalona = " + vlasnikSalona + ", " +
+                "prosjecnaOcjena = " + prosjecnaOcjena +
                 "lokacija = " + lokacija + ")";
     }
+
+
 }

@@ -38,6 +38,15 @@ public class SalonUslugaService {
         return salonUslugaRepository.findById(id);
     }
 
+    public List<SalonUslugaDto> getSalonUslugaBySalonId(Long id) {
+        List<SalonUsluga> salonUsluge = salonUslugaRepository.findBySalonId(id);
+        List<SalonUslugaDto> salonUslugaDtoList = new ArrayList<>();
+        for(SalonUsluga s : salonUsluge) {
+            salonUslugaDtoList.add(new SalonUslugaDto(s));
+        }
+        return salonUslugaDtoList;
+    }
+
 
     public SalonUsluga saveSalonUsluga(SalonUsluga salonUsluga) {
         return salonUslugaRepository.save(salonUsluga);
