@@ -11,6 +11,7 @@ import java.util.List;
 public interface UslugaRepository extends JpaRepository<Usluga, Long> {
 
     List<Usluga> findByStatus(String status);
+
     @Query("SELECT DISTINCT u.naziv FROM Usluga u")
     List<String> findDistinctNaziv();
 }
