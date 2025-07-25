@@ -1,9 +1,11 @@
 package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.dto.KorisnikDto;
+import com.example.ebeautycentar.dto.RezervacijaSalonDto;
 import com.example.ebeautycentar.dto.SalonDto;
 import com.example.ebeautycentar.entity.Korisnik;
 import com.example.ebeautycentar.entity.Salon;
+import com.example.ebeautycentar.service.RezervacijaService;
 import com.example.ebeautycentar.service.SalonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,14 @@ import java.util.Optional;
 public class SalonController {
 
     private final SalonService salonService;
+    private final RezervacijaService rezervacijaService;
 
     @Autowired
-    public SalonController(SalonService salonService) {
+    public SalonController(SalonService salonService, RezervacijaService rezervacijaService) {
         this.salonService = salonService;
+        this.rezervacijaService = rezervacijaService;
     }
+
 
     @GetMapping
     public ResponseEntity<List<SalonDto>> getAllSalon() {
@@ -127,5 +132,15 @@ public class SalonController {
         }else {
             return ResponseEntity.ok(saloni.subList(0,4));
         }
+    }
+
+    @GetMapping("/{id}/rezervacije")
+   public ResponseEntity<List<RezervacijaSalonDto>>getRezervacijeZaSalon(@PathVariable Long id)
+    {
+        List<RezervacijaSalonDto>rezervacije=rezervacijaService.getRezervacijaBySalonId(id);
+        if (rezervacije.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(rezervacije);
     }
 }

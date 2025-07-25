@@ -18,10 +18,10 @@ public class RezervacijaDto implements Serializable {
     private final Long vlasnikSalonaId;
     private final Instant terminPocetkaUsluge;
     private final Long registrovaniKlijentId;
-    private final ZaposleniSalonUslugaIdDto zaposleniSalonUslugaId;
+    private final Long zaposleniSalonUslugaId;
     private final Instant terminZavršetkaUsluge;
 
-    public RezervacijaDto(Long id, Instant vrijemeZakazivanja, String status, Instant vrijemeOtkazivanjaVlasnik, Instant vrijemeOtkazivanjaKlijent, Long vlasnikSalonaId, Instant terminPocetkaUsluge, Long registrovaniKlijentId, ZaposleniSalonUslugaIdDto zaposleniSalonUslugaId, Instant terminZavršetkaUsluge) {
+    public RezervacijaDto(Long id, Instant vrijemeZakazivanja, String status, Instant vrijemeOtkazivanjaVlasnik, Instant vrijemeOtkazivanjaKlijent, Long vlasnikSalonaId, Instant terminPocetkaUsluge, Long registrovaniKlijentId, Long zaposleniSalonUslugaId, Instant terminZavršetkaUsluge) {
         this.id = id;
         this.vrijemeZakazivanja = vrijemeZakazivanja;
         this.status = status;
@@ -43,7 +43,7 @@ public class RezervacijaDto implements Serializable {
         this.vlasnikSalonaId = rezervacija.getVlasnikSalona().getId();
         this.terminPocetkaUsluge = rezervacija.getTerminPocetkaUsluge();
         this.registrovaniKlijentId = rezervacija.getRegistrovaniKlijent().getId();
-        this.zaposleniSalonUslugaId = new ZaposleniSalonUslugaIdDto(rezervacija.getZaposleniSalonUsluga().getId());
+        this.zaposleniSalonUslugaId = rezervacija.getZaposleniSalonUsluga().getId();
         this.terminZavršetkaUsluge = rezervacija.getTerminZavršetkaUsluge();
     }
 
@@ -79,7 +79,7 @@ public class RezervacijaDto implements Serializable {
         return registrovaniKlijentId;
     }
 
-    public ZaposleniSalonUslugaIdDto getZaposleniSalonUslugaId() {
+    public Long getZaposleniSalonUslugaId() {
         return zaposleniSalonUslugaId;
     }
 

@@ -38,7 +38,9 @@ public class Rezervacija {
     private RegistrovaniKlijent registrovaniKlijent;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "zaposleni_salon_usluga_id", nullable = false)
     private ZaposleniSalonUsluga zaposleniSalonUsluga;
+
 
     @Column(name = "`termin_završetka_usluge`", nullable = false)
     private Instant terminZavršetkaUsluge;

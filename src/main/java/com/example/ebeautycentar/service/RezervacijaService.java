@@ -2,6 +2,7 @@ package com.example.ebeautycentar.service;
 
 
 import com.example.ebeautycentar.dto.RezervacijaDto;
+import com.example.ebeautycentar.dto.RezervacijaSalonDto;
 import com.example.ebeautycentar.entity.Rezervacija;
 import com.example.ebeautycentar.repository.RezervacijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +48,19 @@ public class RezervacijaService {
 
     public List<Rezervacija> findByStatusAktivan(String status) {
         return rezervacijaRepository.findByStatus("A");
+    }
+
+    public List<RezervacijaSalonDto> getRezervacijaBySalonId(Long salonId)
+    {
+        List<Rezervacija>rezervacije=rezervacijaRepository.findBySalonId(salonId);
+
+        return rezervacije.stream().map(r->{
+            String ime=r.getRegistrovaniKlijent().getKorisnik().getIme();
+            String prezime=r.getRegistrovaniKlijent().getKorisnik().getPrezime();
+            String nazivUsluge=r.getZaposleniSalonUsluga().getSalonUsluga().getUsluga().getNaziv();
+            Double cijena=r.getZaposleniSalonUsluga().getSalonUsluga().getCijena();
+
+            return new RezervacijaSalonDto(ime, prezime, nazivUsluge, cijena);
+        }).toList();
     }
 }
