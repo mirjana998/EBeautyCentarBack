@@ -108,4 +108,8 @@ public class SalonService {
                 .map(SalonDto::new)
                 .collect(Collectors.toList());
     }
+    public Salon nadjiPoNazivu(String naziv) {
+        return salonRepository.findByNaziv(naziv)
+                .orElseThrow(() -> new RuntimeException("Salon nije pronađen"));
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.ebeautycentar.controller;
 
+import com.example.ebeautycentar.dto.SalonUslugaDodajDto;
 import com.example.ebeautycentar.dto.SalonUslugaDto;
 import com.example.ebeautycentar.entity.SalonUsluga;
 import com.example.ebeautycentar.service.SalonUslugaService;
@@ -46,5 +47,9 @@ public class SalonUslugaController {
         }return ResponseEntity.ok(salonUsluge);
     }
 
-
+    @PostMapping("/dodaj")
+    public ResponseEntity<SalonUslugaDto> dodajSalonUslugu(@RequestBody SalonUslugaDodajDto dto) {
+        SalonUslugaDto nova = salonUslugaService.kreirajSalonUslugu(dto);
+        return ResponseEntity.ok(nova);
+    }
 }

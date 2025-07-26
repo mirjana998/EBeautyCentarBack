@@ -52,4 +52,9 @@ public class UslugaService {
     public List<String> getSveUsluge() {
         return uslugaRepository.findDistinctNaziv();
     }
+
+    public Usluga nadjiPoNazivu(String naziv) {
+        return uslugaRepository.findByNaziv(naziv)
+                .orElseThrow(() -> new RuntimeException("Usluga nije pronađena"));
+    }
 }

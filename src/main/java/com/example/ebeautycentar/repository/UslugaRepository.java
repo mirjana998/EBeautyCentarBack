@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UslugaRepository extends JpaRepository<Usluga, Long> {
@@ -14,4 +15,5 @@ public interface UslugaRepository extends JpaRepository<Usluga, Long> {
 
     @Query("SELECT DISTINCT u.naziv FROM Usluga u")
     List<String> findDistinctNaziv();
+    Optional<Usluga> findByNaziv(String naziv);
 }
