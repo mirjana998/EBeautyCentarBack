@@ -5,6 +5,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "salon_usluga")
@@ -26,7 +27,7 @@ public class SalonUsluga {
     private LocalDate datumPocetka;
 
     @Column(name = "trajanje_usluge", nullable = false)
-    private Instant trajanjeUsluge;
+    private LocalTime trajanjeUsluge;
 
     @Column(name = "datum_kraja")
     private LocalDate datumKraja;
@@ -73,11 +74,11 @@ public class SalonUsluga {
         this.datumPocetka = datumPocetka;
     }
 
-    public Instant getTrajanjeUsluge() {
+    public LocalTime getTrajanjeUsluge() {
         return trajanjeUsluge;
     }
 
-    public void setTrajanjeUsluge(Instant trajanjeUsluge) {
+    public void setTrajanjeUsluge(LocalTime trajanjeUsluge) {
         this.trajanjeUsluge = trajanjeUsluge;
     }
 

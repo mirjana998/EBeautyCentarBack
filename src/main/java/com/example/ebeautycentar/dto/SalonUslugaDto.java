@@ -3,8 +3,8 @@ package com.example.ebeautycentar.dto;
 import com.example.ebeautycentar.entity.SalonUsluga;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 /**
@@ -15,13 +15,15 @@ public class SalonUslugaDto implements Serializable {
     private final Long salonId;
     private final Long uslugaId;
     private final LocalDate datumPocetka;
-    private final Instant trajanjeUsluge;
+    private final LocalTime trajanjeUsluge;
     private final LocalDate datumKraja;
     private final String status;
     private final Double cijena;
     private final String opis;
 
-    public SalonUslugaDto(Long id, Long salonId, Long uslugaId, LocalDate datumPocetka, Instant trajanjeUsluge, LocalDate datumKraja, String status, Double cijena, String opis) {
+
+
+    public SalonUslugaDto(Long id, Long salonId, Long uslugaId, LocalDate datumPocetka, LocalTime trajanjeUsluge, LocalDate datumKraja, String status, Double cijena, String opis) {
         this.id = id;
         this.salonId = salonId;
         this.uslugaId = uslugaId;
@@ -61,7 +63,7 @@ public class SalonUslugaDto implements Serializable {
         return datumPocetka;
     }
 
-    public Instant getTrajanjeUsluge() {
+    public LocalTime getTrajanjeUsluge() {
         return trajanjeUsluge;
     }
 
