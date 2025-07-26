@@ -9,23 +9,23 @@ import java.util.Objects;
  * DTO for {@link ZaposleniSalonUsluga}
  */
 public class ZaposleniSalonUslugaDto implements Serializable {
-    private final ZaposleniSalonUslugaIdDto id;
+    private final Long id;
     private final Long zaposleniId;
     private final Long salonUslugaId;
 
-    public ZaposleniSalonUslugaDto(ZaposleniSalonUslugaIdDto id, Long zaposleniId, Long salonUslugaId) {
+    public ZaposleniSalonUslugaDto(Long id, Long zaposleniId, Long salonUslugaId) {
         this.id = id;
         this.zaposleniId = zaposleniId;
         this.salonUslugaId = salonUslugaId;
     }
 
     public ZaposleniSalonUslugaDto(ZaposleniSalonUsluga zaposleniSalonUsluga) {
-        this.id = new ZaposleniSalonUslugaIdDto(zaposleniSalonUsluga.getId());
+        this.id = zaposleniSalonUsluga.getId();
         this.zaposleniId = zaposleniSalonUsluga.getZaposleni().getId();
         this.salonUslugaId = zaposleniSalonUsluga.getSalonUsluga().getId();
     }
 
-    public ZaposleniSalonUslugaIdDto getId() {
+    public Long getId() {
         return id;
     }
 

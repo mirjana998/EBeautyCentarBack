@@ -5,15 +5,16 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "ocjena_klijenta")
 public class OcjenaKlijenta {
-    @EmbeddedId
-    private OcjenaKlijentaId id;
 
-    @MapsId("vlasnikSalonaId")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vlasnik_salona_id", nullable = false)
     private VlasnikSalona vlasnikSalona;
 
-    @MapsId("registrovaniKlijentId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "registrovani_klijent_id", nullable = false)
     private RegistrovaniKlijent registrovaniKlijent;
@@ -21,11 +22,11 @@ public class OcjenaKlijenta {
     @Column(name = "ocjena", nullable = false)
     private Integer ocjena;
 
-    public OcjenaKlijentaId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(OcjenaKlijentaId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
