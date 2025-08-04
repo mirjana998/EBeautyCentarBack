@@ -31,6 +31,10 @@ public class RadnoVrijemeService {
         return radnoVrijemeDtoList;
     }
 
+    public RadnoVrijeme findRadnoVrijemeByDanUSedmiciIdAndSalonId(Integer danUSedmiciId, Long salonId) {
+        return radnoVrijemeRepository.findRadnoVrijemeByDanUSedmiciIdAndSalonId(danUSedmiciId, salonId);
+    }
+
 
     public Optional<RadnoVrijeme> getRadnoVrijemeById(Long id) {
         return radnoVrijemeRepository.findById(id);

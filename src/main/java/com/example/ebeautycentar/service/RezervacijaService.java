@@ -63,4 +63,8 @@ public class RezervacijaService {
             return new RezervacijaSalonDto(ime, prezime, nazivUsluge, cijena);
         }).toList();
     }
+
+    public List<Rezervacija> getRezervacijaByZaposleniId(Long zaposleniId) {
+       return rezervacijaRepository.findByZaposleniId(zaposleniId, "I");
+    }
 }
