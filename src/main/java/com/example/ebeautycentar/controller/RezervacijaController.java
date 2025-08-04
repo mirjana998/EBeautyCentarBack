@@ -1,13 +1,108 @@
 package com.example.ebeautycentar.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.ebeautycentar.entity.RadnoVrijeme;
+import com.example.ebeautycentar.entity.Rezervacija;
+import com.example.ebeautycentar.entity.SalonUsluga;
+import com.example.ebeautycentar.service.RadnoVrijemeService;
+import com.example.ebeautycentar.service.RezervacijaService;
+import com.example.ebeautycentar.service.SalonUslugaService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/rezervacija")
 public class RezervacijaController {
+
+    public final RezervacijaService rezervacijaService;
+    public final SalonUslugaService salonUslugaService;
+    public final RadnoVrijemeService radnoVrijemeService;
+
+    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService) {
+        this.rezervacijaService = rezervacijaService;
+        this.salonUslugaService = salonUslugaService;
+        this.radnoVrijemeService = radnoVrijemeService;
+    }
+
+    public static boolean istiDan(Instant instant1, Instant instant2) {
+        ZoneId zoneId = ZoneId.of("Europe/Belgrade");
+        LocalDate date1 = instant1.atZone(zoneId).toLocalDate();
+        LocalDate date2 = instant2.atZone(zoneId).toLocalDate();
+        System.out.println("Date1: " + date1 + ", Date2: " + date2 + " E: " + date1.isEqual(date2) );
+        return date1.isEqual(date2);
+    }
+
+    public static boolean uporediVremenaRezervacije(Rezervacija zakazanaRezervacija, Instant pocetakUpitneRezervacije, Instant zavrsetakUpitneRezervacije) {
+        SalonUsluga uslugaZakazaneRezervacije = zakazanaRezervacija.getZaposleniSalonUsluga().getSalonUsluga();
+        Instant pocetakZakazaneRezervacije = zakazanaRezervacija.getTerminPocetkaUsluge();
+        Instant zavrsetakZakazaneRezervacije = pocetakZakazaneRezervacije.plus(uslugaZakazaneRezervacije.getTrajanjeUsluge().getHour(),ChronoUnit.HOURS).plus(uslugaZakazaneRezervacije.getTrajanjeUsluge().getMinute(),ChronoUnit.MINUTES).plus(uslugaZakazaneRezervacije.getTrajanjeUsluge().getSecond(),ChronoUnit.SECONDS);
+        if(zavrsetakUpitneRezervacije.isBefore(pocetakZakazaneRezervacije) || pocetakUpitneRezervacije.isAfter(zavrsetakZakazaneRezervacije))
+            return false;
+        return true;
+    }
+
+    public static boolean provjeriRadnoVrijeme(LocalTime pocetakRadnoVrijeme,LocalTime krajRadnoVrijeme, Instant pocetakUpitneRezervacije, Instant zavrsetakUpitneRezervacije) {
+        ZoneId zoneId = ZoneId.of("Europe/Belgrade");
+        LocalTime vrijemePocetka = LocalTime.ofInstant(pocetakUpitneRezervacije, zoneId);
+        LocalTime vrijemeZavrsetka = LocalTime.ofInstant(zavrsetakUpitneRezervacije, zoneId);
+        if(pocetakRadnoVrijeme.isAfter(vrijemePocetka) || krajRadnoVrijeme.isBefore(vrijemeZavrsetka))
+            return false;
+        return true;
+    }
+
+
+    @GetMapping("/provjera")
+    public ResponseEntity<String> provjeriSlobodnuRezervaciju(@RequestParam Long usluga, @RequestParam Long zaposleni, @RequestParam("datum") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime datum) {
+        ZoneId zoneId = ZoneId.of("Europe/Belgrade");
+        ZonedDateTime zonedDateTime = datum.atZone(zoneId);
+        Instant datumRezervacije = zonedDateTime.toInstant();
+
+        System.out.println("usluga: " + usluga);
+        System.out.println("zaposleni: " + zaposleni);
+        System.out.println("datum pocetka: " + datumRezervacije);
+        System.out.println("dan u sedmici: " + datumRezervacije.atZone(ZoneId.systemDefault()).getDayOfWeek().getValue());
+
+        Optional<SalonUsluga> salonUslugaOptional = salonUslugaService.getSalonUslugaById(usluga);
+        if(salonUslugaOptional.isPresent()) {
+            SalonUsluga salonUsluga = salonUslugaOptional.get();
+
+        // prvo odredi vrijeme zavrsetka rezervacije za koju se salje upit
+            Instant datumZavrsetkaRezervacije = datumRezervacije.plus(salonUsluga.getTrajanjeUsluge().getHour(), ChronoUnit.HOURS).plus(salonUsluga.getTrajanjeUsluge().getMinute(),ChronoUnit.MINUTES).plus(salonUsluga.getTrajanjeUsluge().getSecond(),ChronoUnit.SECONDS);
+
+            RadnoVrijeme radnoVrijeme = radnoVrijemeService.findRadnoVrijemeByDanUSedmiciIdAndSalonId(datum.atZone(ZoneId.systemDefault()).getDayOfWeek().getValue(),salonUsluga.getSalon().getId());
+            if(!provjeriRadnoVrijeme(radnoVrijeme.getPocetakRadnoVrijeme(), radnoVrijeme.getKrajRadnoVrijeme(),datumRezervacije, datumZavrsetkaRezervacije)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            List<Rezervacija> rezervacijeZaposlenog = rezervacijaService.getRezervacijaByZaposleniId(zaposleni);
+
+            List<Rezervacija> rezervacijeIstiDan = rezervacijeZaposlenog.stream().filter(rezervacija ->
+                    istiDan(rezervacija.getTerminPocetkaUsluge(),datumRezervacije)).toList();
+//            rezervacijeIstiDan.stream().forEach(rezervacija -> {
+//                System.out.println("Dan: " + rezervacija.getId() + " " + rezervacija.getZaposleniSalonUsluga().getZaposleni().getId() + " " + rezervacija.getTerminPocetkaUsluge());
+//            });
+
+            List<Rezervacija> preklapajuceRezervacije = rezervacijeIstiDan.stream().filter(rezervacija ->
+                   uporediVremenaRezervacije(rezervacija,datumRezervacije,datumZavrsetkaRezervacije) ).toList();
+            preklapajuceRezervacije.stream().forEach(rezervacija -> {
+                System.out.println("Preklapanje: " + rezervacija.getId() + " " + rezervacija.getZaposleniSalonUsluga().getZaposleni().getId() + " " + LocalDateTime.ofInstant(rezervacija.getTerminPocetkaUsluge(),zoneId));
+            });
+            if(preklapajuceRezervacije.isEmpty()) {
+                return ResponseEntity.ok("SLOBODAN!");
+            }else {
+                return ResponseEntity.notFound().build();
+            }
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 }

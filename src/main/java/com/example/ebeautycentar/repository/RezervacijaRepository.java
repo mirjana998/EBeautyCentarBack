@@ -20,4 +20,16 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> 
     WHERE su.salon_id = :salonId
     """, nativeQuery = true)
     List<Rezervacija> findBySalonId(@Param("salonId") Long salonId);
+
+    @Query(value= """
+        select rez.*
+        from rezervacija rez
+        join zaposleni_salon_usluga zsu 
+            on rez.zaposleni_salon_usluga_id = zsu.id
+        join salon_usluga su 
+            on zsu.salon_usluga_id = su.id
+        where zsu.zaposleni_id= :zaposleniId
+        and rez.status = :status
+    """, nativeQuery = true)
+    List<Rezervacija> findByZaposleniId(@Param("zaposleniId") Long zaposleniId, @Param("status") String status);
 }
