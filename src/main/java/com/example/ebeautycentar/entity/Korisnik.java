@@ -2,6 +2,9 @@ package com.example.ebeautycentar.entity;
 
 import jakarta.persistence.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "korisnik")
 public class Korisnik {
@@ -19,10 +22,10 @@ public class Korisnik {
     @Column(name = "broj_telefona", nullable = false, length = 20)
     private String brojTelefona;
 
-    @Column(name = "email", nullable = false, length = 45)
+    @Column(name = "email", nullable = false, length = 45, unique = true)
     private String email;
 
-    @Column(name = "korisnicko_ime", nullable = false, length = 45)
+    @Column(name = "korisnicko_ime", nullable = false, length = 45, unique = true)
     private String korisnickoIme;
 
     @Column(name = "lozinka", nullable = false, length = 45)
