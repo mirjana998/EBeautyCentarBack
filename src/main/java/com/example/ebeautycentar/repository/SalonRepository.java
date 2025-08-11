@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface SalonRepository extends JpaRepository<Salon, Long> {
 
     List<Salon> findByStatus(String status);
+    /*
     @Query(value = """
     SELECT DISTINCT s.* 
     FROM salon s
@@ -75,6 +76,7 @@ public interface SalonRepository extends JpaRepository<Salon, Long> {
     WHERE u.naziv = :usluga AND s.naziv like :naziv AND s.status= :status
     """, nativeQuery = true)
     List<Salon>findByUslugaAndNaziv(@Param("usluga") String usluga, @Param("naziv") String naziv,@Param("status") String status);
+    */
 
     @Query(value = """
     SELECT DISTINCT s.* 
@@ -84,7 +86,10 @@ public interface SalonRepository extends JpaRepository<Salon, Long> {
     JOIN salon_usluga su ON su.id = zsu.salon_usluga_id
     JOIN usluga u ON u.id = su.usluga_id
     JOIN lokacija l ON s.lokacija_id = l.id
-    WHERE l.grad=:grad AND u.naziv = :usluga AND s.naziv like :naziv AND s.status= :status
+    WHERE (l.grad=:grad or :grad is null ) 
+      AND (u.naziv = :usluga or :usluga is null ) 
+      AND (s.naziv like :naziv or :naziv is null )
+      AND s.status= :status
     """, nativeQuery = true)
     List<Salon>findByGradAndUslugaAndNaziv(@Param("grad") String grad,@Param("usluga") String usluga, @Param("naziv") String naziv,@Param("status") String status);
 
