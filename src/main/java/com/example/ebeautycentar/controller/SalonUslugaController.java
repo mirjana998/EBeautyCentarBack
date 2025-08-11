@@ -2,12 +2,22 @@ package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.dto.SalonUslugaDodajDto;
 import com.example.ebeautycentar.dto.SalonUslugaDto;
+import com.example.ebeautycentar.entity.RadnoVrijeme;
 import com.example.ebeautycentar.entity.SalonUsluga;
+import com.example.ebeautycentar.service.RadnoVrijemeService;
 import com.example.ebeautycentar.service.SalonUslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +27,12 @@ import java.util.Optional;
 public class SalonUslugaController {
 
     private final SalonUslugaService salonUslugaService;
+    private final RadnoVrijemeService radnoVrijemeService;
 
     @Autowired
-    public SalonUslugaController(SalonUslugaService salonUslugaService) {
+    public SalonUslugaController(SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService) {
         this.salonUslugaService = salonUslugaService;
+        this.radnoVrijemeService = radnoVrijemeService;
     }
 
     @GetMapping
@@ -52,4 +64,5 @@ public class SalonUslugaController {
         SalonUslugaDto nova = salonUslugaService.kreirajSalonUslugu(dto);
         return ResponseEntity.ok(nova);
     }
+
 }

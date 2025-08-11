@@ -31,7 +31,7 @@ public class SalonController {
 
     @GetMapping
     public ResponseEntity<List<SalonDto>> getAllSalon() {
-        List<SalonDto>saloni=salonService.getAllSalon();
+        List<SalonDto> saloni = salonService.getAllSalon();
         if (saloni.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -41,10 +41,10 @@ public class SalonController {
     @GetMapping("/{id}")
     public ResponseEntity<SalonDto> getSalonById(@PathVariable Long id) {
         Optional<Salon> salon = salonService.getSalonById(id);
-        if(salon.isPresent()) {
+        if (salon.isPresent()) {
             SalonDto salonDto = new SalonDto(salon.get());
             return ResponseEntity.ok(salonDto);
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
@@ -56,7 +56,12 @@ public class SalonController {
     }
 
     @GetMapping("/pretraga")
-    public ResponseEntity<List<SalonDto>> pretragaSalona(@RequestParam String grad, @RequestParam String usluga,@RequestParam String naziv) {
+    public ResponseEntity<List<SalonDto>> pretragaSalona(@RequestParam String grad, @RequestParam String usluga, @RequestParam String naziv) {
+        return ResponseEntity.ok(salonService.getSaloniByGradAndUslugaAndNaziv(grad, usluga, naziv));
+    }
+
+
+        /*
         if("".equals(grad)&& "".equals(usluga)&&!"".equals(naziv))
         {
             List<SalonDto> saloni = salonService.findByNazivAndStatus(naziv,"A");
@@ -120,7 +125,7 @@ public class SalonController {
             }
             return ResponseEntity.ok(saloni);
         }
-    }
+    }*/
 
     @GetMapping("/popularni")
     public ResponseEntity<List<SalonDto>> getPopularniSaloni() {

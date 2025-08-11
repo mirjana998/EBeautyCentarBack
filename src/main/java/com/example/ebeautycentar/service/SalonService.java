@@ -50,6 +50,8 @@ public class SalonService {
         return salonRepository.findByStatus("A");
     }
 
+    /*
+
     public List<SalonDto> getSaloniByLokacijaIUsluga(String grad, String usluga) {
         List<Salon> saloni = salonRepository.findByGradAndUsluga(grad, usluga,"A");
         return saloni.stream()
@@ -92,7 +94,8 @@ public class SalonService {
         return saloni.stream()
                 .map(SalonDto::new)
                 .collect(Collectors.toList());
-    }
+    }*/
+
     public List<SalonDto>getSaloniByGradAndUslugaAndNaziv(String grad,String usluga,String naziv)
     {
         List<Salon>saloni=salonRepository.findByGradAndUslugaAndNaziv(grad,usluga,"%"+naziv+"%","A");
