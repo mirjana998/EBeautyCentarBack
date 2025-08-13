@@ -96,9 +96,21 @@ public class SalonService {
                 .collect(Collectors.toList());
     }*/
 
-    public List<SalonDto>getSaloniByGradAndUslugaAndNaziv(String grad,String usluga,String naziv)
+    public List<SalonDto>getSaloniByGradAndUslugaAndNaziv(String grad,Integer usluga,String naziv)
     {
-        List<Salon>saloni=salonRepository.findByGradAndUslugaAndNaziv(grad,usluga,"%"+naziv+"%","A");
+        String gradtmp;
+        String nazivtmp;
+        if (grad == null) {
+            gradtmp = null;
+        }else{
+            gradtmp = "%"+grad+"%";
+        }
+        if (naziv == null) {
+            nazivtmp = null;
+        }else {
+            nazivtmp = "%"+naziv+"%";
+        }
+        List<Salon>saloni=salonRepository.findByGradAndUslugaAndNaziv(gradtmp,usluga,nazivtmp,"A");
         return saloni.stream()
                 .map(SalonDto::new)
                 .collect(Collectors.toList());

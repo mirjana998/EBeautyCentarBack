@@ -29,15 +29,6 @@ public class SalonController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<List<SalonDto>> getAllSalon() {
-        List<SalonDto> saloni = salonService.getAllSalon();
-        if (saloni.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(saloni);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<SalonDto> getSalonById(@PathVariable Long id) {
         Optional<Salon> salon = salonService.getSalonById(id);
@@ -55,8 +46,8 @@ public class SalonController {
         return ResponseEntity.ok("OBRISAN!");
     }
 
-    @GetMapping("/pretraga")
-    public ResponseEntity<List<SalonDto>> pretragaSalona(@RequestParam String grad, @RequestParam String usluga, @RequestParam String naziv) {
+    @GetMapping
+    public ResponseEntity<List<SalonDto>> pretragaSalona(@RequestParam(required = false) String grad, @RequestParam(required = false) Integer usluga, @RequestParam(required = false) String naziv) {
         return ResponseEntity.ok(salonService.getSaloniByGradAndUslugaAndNaziv(grad, usluga, naziv));
     }
 

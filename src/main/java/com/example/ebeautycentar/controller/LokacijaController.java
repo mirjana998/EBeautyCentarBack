@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/lokacija")
 public class LokacijaController {
@@ -24,6 +25,11 @@ public class LokacijaController {
     @GetMapping
     public List<LokacijaDto> getAllLokacija() {
         return lokacijaService.getAllLokacija();
+    }
+
+    @GetMapping("/distinct")
+    public List<String> getAllDistinctLokacija() {
+        return lokacijaService.getAllDistinctLokacija();
     }
 
     @GetMapping("/{id}")

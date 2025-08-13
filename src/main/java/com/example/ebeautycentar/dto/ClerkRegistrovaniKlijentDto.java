@@ -1,6 +1,8 @@
 package com.example.ebeautycentar.dto;
 
-public class ClerkRegistrovaniKlijentDto {
+import java.io.Serializable;
+
+public class ClerkRegistrovaniKlijentDto implements Serializable {
 
     private String ime;
     private String prezime;

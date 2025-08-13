@@ -31,6 +31,11 @@ public class LokacijaService {
         return lokacijaDtoList;
     }
 
+    public List<String> getAllDistinctLokacija() {
+        List<String> lokacijaList = lokacijaRepository.findDistinctGrad();
+
+        return lokacijaList;
+    }
 
     public Optional<Lokacija> getLokacijaById(Long id) {
         return lokacijaRepository.findById(id);
