@@ -81,17 +81,15 @@ public interface SalonRepository extends JpaRepository<Salon, Long> {
     @Query(value = """
     SELECT DISTINCT s.* 
     FROM salon s
-    JOIN zaposleni z ON z.salon_id = s.id
-    JOIN zaposleni_salon_usluga zsu ON zsu.zaposleni_id = z.id
-    JOIN salon_usluga su ON su.id = zsu.salon_usluga_id
+    JOIN salon_usluga su ON su.salon_id = s.id
     JOIN usluga u ON u.id = su.usluga_id
     JOIN lokacija l ON s.lokacija_id = l.id
-    WHERE (l.grad=:grad or :grad is null ) 
-      AND (u.naziv = :usluga or :usluga is null ) 
-      AND (s.naziv like :naziv or :naziv is null )
+    WHERE (l.grad like :grad or :grad is null) 
+      AND (u.id = :usluga or :usluga is null) 
+      AND (s.naziv like :naziv or :naziv is null)
       AND s.status= :status
     """, nativeQuery = true)
-    List<Salon>findByGradAndUslugaAndNaziv(@Param("grad") String grad,@Param("usluga") String usluga, @Param("naziv") String naziv,@Param("status") String status);
+    List<Salon>findByGradAndUslugaAndNaziv(@Param("grad") String grad,@Param("usluga") Integer usluga, @Param("naziv") String naziv,@Param("status") String status);
 
     @Query(value = """
     select sal.id, sal.naziv, sal.email, sal.broj_telefona, sal.tip_id, sal.datum_otvaranja, sal.status, sal.datum_zatvaranja, sal.vlasnik_salona_id, sal.lokacija_id from

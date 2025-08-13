@@ -1,6 +1,8 @@
 package com.example.ebeautycentar.dto;
 
 import com.example.ebeautycentar.entity.Zaposleni;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,12 +11,29 @@ import java.util.Objects;
  * DTO for {@link Zaposleni}
  */
 public class ZaposleniDto implements Serializable {
-    private final Long id;
-    private final String ime;
-    private final String prezime;
-    private final String aktivan;
-    private final Long salonId;
-    private final Long vlasnikSalonaId;
+    private  Long id;
+    private  String ime;
+    private  String prezime;
+    private  String aktivan;
+    private  Long salonId;
+    private  Long vlasnikSalonaId;
+
+    @JsonCreator
+    public ZaposleniDto(
+            @JsonProperty("id") Long id,
+            @JsonProperty("ime") String ime,
+            @JsonProperty("prezime") String prezime,
+            @JsonProperty("aktivan") String aktivan,
+            @JsonProperty("salonId") Long salonId,
+            @JsonProperty("vlasnikSalonaId") Long vlasnikSalonaId
+    ) {
+        this.id = id;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.aktivan = aktivan;
+        this.salonId = salonId;
+        this.vlasnikSalonaId = vlasnikSalonaId;
+    }
 
     public ZaposleniDto(Zaposleni zaposleni) {
         this.id = zaposleni.getId();

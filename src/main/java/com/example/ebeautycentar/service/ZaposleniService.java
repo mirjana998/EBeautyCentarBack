@@ -33,6 +33,15 @@ public class ZaposleniService {
         return zaposleniDtoList;
     }
 
+    public List<ZaposleniDto> findBySalon(long salonId) {
+        List<Zaposleni> zaposleniList = zaposleniRepository.findBySalonId(salonId);
+        List<ZaposleniDto> zaposleniDtoList = new ArrayList<>();
+        for(Zaposleni zaposleni : zaposleniList) {
+            zaposleniDtoList.add(new ZaposleniDto(zaposleni));
+        }
+        return zaposleniDtoList;
+    }
+
 
     public Optional<Zaposleni> getZaposleniById(Long id) {
         return zaposleniRepository.findById(id);
