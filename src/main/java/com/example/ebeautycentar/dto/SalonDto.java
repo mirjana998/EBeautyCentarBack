@@ -1,13 +1,11 @@
 package com.example.ebeautycentar.dto;
 
-import com.example.ebeautycentar.entity.Lokacija;
-import com.example.ebeautycentar.entity.Salon;
-import com.example.ebeautycentar.entity.Tip;
-import com.example.ebeautycentar.entity.VlasnikSalona;
+import com.example.ebeautycentar.entity.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,7 +23,26 @@ public class SalonDto implements Serializable {
     private final VlasnikSalonaDto vlasnikSalona;
     private final LokacijaDto lokacija;
     private BigDecimal prosjecnaOcjena;
+    private String naslovnaSlika;
+    private List<String> galerijaSlika;
 
+
+    public SalonDto(Salon salon, String slika, List<String> galerijaSlika) {
+        this.id = salon.getId();
+        this.naziv = salon.getNaziv();
+        this.email = salon.getEmail();
+        this.brojTelefona = salon.getBrojTelefona();
+        this.tip = new TipDto(salon.getTip());
+        this.datumOtvaranja = salon.getDatumOtvaranja();
+        this.status = salon.getStatus();
+        this.datumZatvaranja = salon.getDatumZatvaranja();
+        this.lokacija = new LokacijaDto(salon.getLokacija());
+        this.vlasnikSalona = new VlasnikSalonaDto(salon.getVlasnikSalona());
+        this.prosjecnaOcjena = salon.getProsjecnaOcjena();
+        this.naslovnaSlika = slika;
+        this.galerijaSlika = galerijaSlika;
+
+    }
 
     public SalonDto(Salon salon) {
         this.id = salon.getId();
@@ -39,6 +56,8 @@ public class SalonDto implements Serializable {
         this.lokacija = new LokacijaDto(salon.getLokacija());
         this.vlasnikSalona = new VlasnikSalonaDto(salon.getVlasnikSalona());
         this.prosjecnaOcjena = salon.getProsjecnaOcjena();
+        this.naslovnaSlika = null;
+        this.galerijaSlika = null;
     }
 
 
@@ -129,4 +148,19 @@ public class SalonDto implements Serializable {
     }
 
 
+    public String getNaslovnaSlika() {
+        return naslovnaSlika;
+    }
+
+    public void setNaslovnaSlika(String naslovnaSlika) {
+        this.naslovnaSlika = naslovnaSlika;
+    }
+
+    public List<String> getGalerijaSlika() {
+        return galerijaSlika;
+    }
+
+    public void setGalerijaSlika(List<String> galerijaSlika) {
+        this.galerijaSlika = galerijaSlika;
+    }
 }

@@ -5,14 +5,17 @@ import com.example.ebeautycentar.dto.RezervacijaSalonDto;
 import com.example.ebeautycentar.dto.SalonDto;
 import com.example.ebeautycentar.entity.Korisnik;
 import com.example.ebeautycentar.entity.Salon;
+import com.example.ebeautycentar.entity.Slika;
 import com.example.ebeautycentar.service.RezervacijaService;
 import com.example.ebeautycentar.service.SalonService;
+import com.example.ebeautycentar.service.SlikaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -21,11 +24,13 @@ public class SalonController {
 
     private final SalonService salonService;
     private final RezervacijaService rezervacijaService;
+    private final SlikaService slikaService;
 
     @Autowired
-    public SalonController(SalonService salonService, RezervacijaService rezervacijaService) {
+    public SalonController(SalonService salonService, RezervacijaService rezervacijaService, SlikaService slikaService) {
         this.salonService = salonService;
         this.rezervacijaService = rezervacijaService;
+        this.slikaService = slikaService;
     }
 
 
@@ -33,7 +38,10 @@ public class SalonController {
     public ResponseEntity<SalonDto> getSalonById(@PathVariable Long id) {
         Optional<Salon> salon = salonService.getSalonById(id);
         if (salon.isPresent()) {
-            SalonDto salonDto = new SalonDto(salon.get());
+            List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.get().getId(), "G");
+            List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
+            List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.get().getId(), "N");
+            SalonDto salonDto = new SalonDto(salon.get(),naslovne.get(0).getNaziv(),galerija);
             return ResponseEntity.ok(salonDto);
         } else {
             return ResponseEntity.notFound().build();
@@ -48,7 +56,17 @@ public class SalonController {
 
     @GetMapping
     public ResponseEntity<List<SalonDto>> pretragaSalona(@RequestParam(required = false) String grad, @RequestParam(required = false) Integer usluga, @RequestParam(required = false) String naziv) {
-        return ResponseEntity.ok(salonService.getSaloniByGradAndUslugaAndNaziv(grad, usluga, naziv));
+        List<SalonDto> lista = salonService.getSaloniByGradAndUslugaAndNaziv(grad, usluga, naziv);
+        for (SalonDto salon : lista) {
+            List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.getId(), "G");
+            List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
+            List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.getId(), "N");
+            salon.setGalerijaSlika(galerija);
+            if(!naslovne.isEmpty()) {
+                salon.setNaslovnaSlika(naslovne.get(0).getNaziv());
+            }
+        }
+        return ResponseEntity.ok(lista);
     }
 
 

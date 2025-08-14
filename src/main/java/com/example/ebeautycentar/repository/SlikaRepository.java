@@ -8,4 +8,6 @@ import java.util.List;
 public interface SlikaRepository extends JpaRepository<Slika, Long> {
 
     List<Slika> findByStatus(String status);
+
+    List<Slika> findBySalonIdAndStatusAndVrsta(Long salonId, String status, String vrsta);
 }

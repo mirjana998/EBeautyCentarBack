@@ -31,6 +31,10 @@ public class SlikaService {
         return slikaDtoList;
     }
 
+    public List<Slika> getBySalonIdAndStatusAndVrsta(Long salonId, String vrsta) {
+        return this.slikaRepository.findBySalonIdAndStatusAndVrsta(salonId, "A", vrsta);
+    }
+
 
     public Optional<Slika> getSlikaById(Long id) {
         return slikaRepository.findById(id);
