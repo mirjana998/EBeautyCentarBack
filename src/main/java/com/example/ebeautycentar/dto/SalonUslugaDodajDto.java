@@ -12,6 +12,7 @@ public class SalonUslugaDodajDto implements Serializable {
     private Double cijena;
     private String opis;
 
+    public SalonUslugaDodajDto(){}
     public SalonUslugaDodajDto(String nazivSalona, String nazivUsluge, LocalTime trajanje_usluge, Double cijena, String opis) {
         this.nazivSalona = nazivSalona;
         this.nazivUsluge = nazivUsluge;

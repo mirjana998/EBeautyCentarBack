@@ -3,17 +3,13 @@ package com.example.ebeautycentar.service;
 import com.example.ebeautycentar.dto.KorisnikDto;
 import com.example.ebeautycentar.dto.SalonUslugaDodajDto;
 import com.example.ebeautycentar.dto.SalonUslugaDto;
-import com.example.ebeautycentar.entity.Korisnik;
-import com.example.ebeautycentar.entity.Salon;
-import com.example.ebeautycentar.entity.SalonUsluga;
-import com.example.ebeautycentar.entity.Usluga;
-import com.example.ebeautycentar.repository.KorisnikRepository;
-import com.example.ebeautycentar.repository.SalonRepository;
-import com.example.ebeautycentar.repository.SalonUslugaRepository;
-import com.example.ebeautycentar.repository.UslugaRepository;
+import com.example.ebeautycentar.entity.*;
+import com.example.ebeautycentar.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +22,14 @@ public class SalonUslugaService {
     private final SalonUslugaRepository salonUslugaRepository;
     private final SalonRepository salonRepository;
     private final UslugaRepository uslugaRepository;
+    private final SlikaRepository slikaRepository;
 
     @Autowired
-    public SalonUslugaService(SalonUslugaRepository salonUslugaRepository,SalonRepository salonRepository,UslugaRepository uslugaRepository) {
+    public SalonUslugaService(SalonUslugaRepository salonUslugaRepository,SalonRepository salonRepository,UslugaRepository uslugaRepository,SlikaRepository slikaRepository) {
         this.salonUslugaRepository = salonUslugaRepository;
         this.salonRepository = salonRepository;
         this.uslugaRepository = uslugaRepository;
+        this.slikaRepository=slikaRepository;
     }
 
     public List<SalonUslugaDto> getAllSalonUsluga() {
@@ -70,7 +68,7 @@ public class SalonUslugaService {
         return salonUslugaRepository.findByStatus("A");
     }
 
-    public SalonUslugaDto kreirajSalonUslugu(SalonUslugaDodajDto dto) {
+    public SalonUslugaDto kreirajSalonUslugu(SalonUslugaDodajDto dto, MultipartFile slikaFile) throws IOException {
         Salon salon = salonRepository.findByNaziv(dto.getNazivSalona())
                 .orElseThrow(() -> new RuntimeException("Salon nije pronađen"));
 
@@ -84,13 +82,22 @@ public class SalonUslugaService {
         nova.setTrajanjeUsluge(dto.getTrajanje_usluge());
         nova.setCijena(dto.getCijena());
         nova.setOpis(dto.getOpis());
-
         // Postavljamo defaultne vrijednosti
         nova.setDatumPocetka(null);
         nova.setDatumKraja(null);
         nova.setStatus("A");
-
         salonUslugaRepository.save(nova);
+
+        if (slikaFile != null && !slikaFile.isEmpty()) {
+            Slika slika = new Slika();
+            slika.setNaziv(usluga.getNaziv());
+            slika.setSalon(salon);
+            slika.setVrsta("G");
+            slika.setUsluga(usluga);
+            slika.setStatus("A");
+            slika.setSlika(slikaFile.getBytes());
+            slikaRepository.save(slika);
+        }
 
         return new SalonUslugaDto(nova);
     }

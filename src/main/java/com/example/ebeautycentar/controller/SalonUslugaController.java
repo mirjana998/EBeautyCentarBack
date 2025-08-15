@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -60,8 +62,22 @@ public class SalonUslugaController {
     }
 
     @PostMapping("/dodaj")
-    public ResponseEntity<SalonUslugaDto> dodajSalonUslugu(@RequestBody SalonUslugaDodajDto dto) {
-        SalonUslugaDto nova = salonUslugaService.kreirajSalonUslugu(dto);
+    public ResponseEntity<SalonUslugaDto> dodajSalonUslugu(@RequestParam String nazivSalona,
+                                                           @RequestParam String nazivUsluge,
+                                                           @RequestParam String trajanje_usluge,
+                                                           @RequestParam Double cijena,
+                                                           @RequestParam(required = false) String opis,
+                                                           @RequestParam(required = false) MultipartFile slika) throws IOException {
+
+        LocalTime trajanje = LocalTime.parse(trajanje_usluge);
+
+        SalonUslugaDodajDto dto = new SalonUslugaDodajDto();
+        dto.setNazivSalona(nazivSalona);
+        dto.setNazivUsluge(nazivUsluge);
+        dto.setTrajanje_usluge(trajanje);
+        dto.setCijena(cijena);
+        dto.setOpis(opis);
+        SalonUslugaDto nova = salonUslugaService.kreirajSalonUslugu(dto,slika);
         return ResponseEntity.ok(nova);
     }
 
