@@ -44,4 +44,9 @@ public class RegistrovaniKlijentService {
     public void deleteNotifikacija(Long id) {
         registrovsniKlijentRespository.deleteById(id);
     }
+
+
+    public Optional<RegistrovaniKlijent> getByKorisnikId(Long korisnikId) {
+        return registrovsniKlijentRespository.findByKorisnikId(korisnikId);
+    }
 }

@@ -61,6 +61,11 @@ public class KorisnikService {
         return bicycleRepository.save(b);
     }
     */
+
+    public Optional<Korisnik> findByEmail(String email) {
+        return korisnikRepository.findByEmail(email);
+    }
+
 }
 
 

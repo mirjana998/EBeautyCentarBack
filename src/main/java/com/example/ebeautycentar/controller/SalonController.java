@@ -41,7 +41,12 @@ public class SalonController {
             List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.get().getId(), "G");
             List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
             List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.get().getId(), "N");
-            SalonDto salonDto = new SalonDto(salon.get(),naslovne.get(0).getNaziv(),galerija);
+            Slika naslovnaSlika = null;
+            if (galerijaSlika != null && !galerijaSlika.isEmpty()) {
+                naslovnaSlika = galerijaSlika.get(0);
+            }
+
+            SalonDto salonDto = new SalonDto(salon.get(),naslovnaSlika.getNaziv(),galerija);
             return ResponseEntity.ok(salonDto);
         } else {
             return ResponseEntity.notFound().build();
