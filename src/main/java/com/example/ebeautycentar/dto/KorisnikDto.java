@@ -17,8 +17,11 @@ public class KorisnikDto implements Serializable {
     private final String korisnickoIme;
     private final String lozinka;
     private final String status;
+    private final String clerkUserId; // ✅ novo polje
 
-    public KorisnikDto(Long id, String ime, String prezime, String brojTelefona, String email, String korisnickoIme, String lozinka, String status) {
+    public KorisnikDto(Long id, String ime, String prezime, String brojTelefona,
+                       String email, String korisnickoIme, String lozinka,
+                       String status, String clerkUserId) {
         this.id = id;
         this.ime = ime;
         this.prezime = prezime;
@@ -27,6 +30,7 @@ public class KorisnikDto implements Serializable {
         this.korisnickoIme = korisnickoIme;
         this.lozinka = lozinka;
         this.status = status;
+        this.clerkUserId = clerkUserId;
     }
 
     public KorisnikDto(Korisnik korisnik) {
@@ -38,6 +42,7 @@ public class KorisnikDto implements Serializable {
         this.korisnickoIme = korisnik.getKorisnickoIme();
         this.lozinka = korisnik.getLozinka();
         this.status = korisnik.getStatus();
+        this.clerkUserId = korisnik.getClerkUserId(); // ✅ mapiranje iz entiteta
     }
 
     public Long getId() {
@@ -72,6 +77,10 @@ public class KorisnikDto implements Serializable {
         return status;
     }
 
+    public String getClerkUserId() {
+        return clerkUserId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,12 +93,13 @@ public class KorisnikDto implements Serializable {
                 Objects.equals(this.email, entity.email) &&
                 Objects.equals(this.korisnickoIme, entity.korisnickoIme) &&
                 Objects.equals(this.lozinka, entity.lozinka) &&
-                Objects.equals(this.status, entity.status);
+                Objects.equals(this.status, entity.status) &&
+                Objects.equals(this.clerkUserId, entity.clerkUserId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ime, prezime, brojTelefona, email, korisnickoIme, lozinka, status);
+        return Objects.hash(id, ime, prezime, brojTelefona, email, korisnickoIme, lozinka, status, clerkUserId);
     }
 
     @Override
@@ -102,6 +112,7 @@ public class KorisnikDto implements Serializable {
                 "email = " + email + ", " +
                 "korisnickoIme = " + korisnickoIme + ", " +
                 "lozinka = " + lozinka + ", " +
-                "status = " + status + ")";
+                "status = " + status + ", " +
+                "clerkUserId = " + clerkUserId + ")";
     }
 }
