@@ -34,6 +34,18 @@ public class Korisnik {
     @Column(name = "status", nullable = false, length = 45)
     private String status;
 
+    @Column(unique = true, nullable = false)
+    private String clerkUserId; // <-- DODAJ OVO
+
+    // getteri i setteri
+    public String getClerkUserId() {
+        return clerkUserId;
+    }
+
+    public void setClerkUserId(String clerkUserId) {
+        this.clerkUserId = clerkUserId;
+    }
+
     public Long getId() {
         return id;
     }

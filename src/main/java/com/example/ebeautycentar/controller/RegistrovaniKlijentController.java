@@ -60,37 +60,54 @@ public class RegistrovaniKlijentController {
     @PostMapping("/registracija")
     public ResponseEntity<RegistrovaniKlijentDto> registracija(@RequestBody ClerkRegistrovaniKlijentDto noviKlijent) {
         try {
-            // prvo provjera da li postoji korisnik po email-u
-            Optional<Korisnik> postojeciKorisnik = korisnikService.findByEmail(noviKlijent.getEmail());
+            // 1. prvo provjera po clerkUserId
+            Optional<Korisnik> postojeciKorisnik = korisnikService.findByClerkUserId(noviKlijent.getClerkUserId());
 
             Korisnik korisnik;
 
             if (postojeciKorisnik.isPresent()) {
-                // Ako već postoji update podatke
+                // update podataka ako vec postoji po clerkUserId
                 korisnik = postojeciKorisnik.get();
                 korisnik.setIme(noviKlijent.getIme());
                 korisnik.setPrezime(noviKlijent.getPrezime());
                 korisnik.setKorisnickoIme(noviKlijent.getKorisnickoIme());
                 korisnik.setBrojTelefona(noviKlijent.getBrojTelefona());
-                korisnik.setStatus("A");
-                korisnik = korisnikService.saveKorisnik(korisnik);
-            } else {
-                // Ako ne postoji - kreiranje novog
-                korisnik = new Korisnik();
-                korisnik.setIme(noviKlijent.getIme());
-                korisnik.setPrezime(noviKlijent.getPrezime());
                 korisnik.setEmail(noviKlijent.getEmail());
-                korisnik.setBrojTelefona(noviKlijent.getBrojTelefona());
-                korisnik.setKorisnickoIme(noviKlijent.getKorisnickoIme());
-                korisnik.setStatus("A");
-                korisnik.setLozinka("korisnik");
+                korisnik.setStatus("A"); // ako je bio D, aktivira se
                 korisnik = korisnikService.saveKorisnik(korisnik);
 
-                // kreiranje registrovanog klijenta samo ako je novi korisnik
-                RegistrovaniKlijent registrovaniKlijent = new RegistrovaniKlijent();
-                registrovaniKlijent.setKorisnik(korisnik);
-                registrovaniKlijent.setBrojTermina(0);
-                registrovaniKlijentService.saveRegistrovaniKlijent(registrovaniKlijent);
+            } else {
+                // 2. provjera po emailu (ako postoji sa statusom D → reaktiviraj)
+                Optional<Korisnik> korisnikPoEmailu = korisnikService.findByEmail(noviKlijent.getEmail());
+                if (korisnikPoEmailu.isPresent()) {
+                    korisnik = korisnikPoEmailu.get();
+                    // update podataka i reaktivacija
+                    korisnik.setIme(noviKlijent.getIme());
+                    korisnik.setPrezime(noviKlijent.getPrezime());
+                    korisnik.setKorisnickoIme(noviKlijent.getKorisnickoIme());
+                    korisnik.setBrojTelefona(noviKlijent.getBrojTelefona());
+                    korisnik.setClerkUserId(noviKlijent.getClerkUserId()); // sad ga vežeš za Clerk
+                    korisnik.setStatus("A"); // ponovo aktiviraj
+                    korisnik = korisnikService.saveKorisnik(korisnik);
+
+                } else {
+                    // 3. kreiranje potpuno novog korisnika
+                    korisnik = new Korisnik();
+                    korisnik.setIme(noviKlijent.getIme());
+                    korisnik.setPrezime(noviKlijent.getPrezime());
+                    korisnik.setEmail(noviKlijent.getEmail());
+                    korisnik.setBrojTelefona(noviKlijent.getBrojTelefona());
+                    korisnik.setKorisnickoIme(noviKlijent.getKorisnickoIme());
+                    korisnik.setStatus("A");
+                    korisnik.setLozinka("korisnik");
+                    korisnik.setClerkUserId(noviKlijent.getClerkUserId());
+                    korisnik = korisnikService.saveKorisnik(korisnik);
+
+                    RegistrovaniKlijent registrovaniKlijent = new RegistrovaniKlijent();
+                    registrovaniKlijent.setKorisnik(korisnik);
+                    registrovaniKlijent.setBrojTermina(0);
+                    registrovaniKlijentService.saveRegistrovaniKlijent(registrovaniKlijent);
+                }
             }
 
             Optional<RegistrovaniKlijent> registrovani = registrovaniKlijentService.getByKorisnikId(korisnik.getId());
@@ -103,6 +120,8 @@ public class RegistrovaniKlijentController {
             return ResponseEntity.status(500).build();
         }
     }
+
+
 
     @PostMapping("/delete")
     public ResponseEntity<Void> deactivateAndDeleteByEmail(@RequestBody Map<String, String> body) {
@@ -125,7 +144,10 @@ public class RegistrovaniKlijentController {
         }
     }
 
-
-
-
 }
+
+
+
+
+
+

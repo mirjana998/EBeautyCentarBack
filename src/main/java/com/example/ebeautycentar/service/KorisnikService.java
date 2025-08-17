@@ -66,6 +66,11 @@ public class KorisnikService {
         return korisnikRepository.findByEmail(email);
     }
 
+    public Optional<Korisnik> findByClerkUserId(String clerkUserId) {
+        return korisnikRepository.findByClerkUserId(clerkUserId);
+    }
+
+
 }
 
 

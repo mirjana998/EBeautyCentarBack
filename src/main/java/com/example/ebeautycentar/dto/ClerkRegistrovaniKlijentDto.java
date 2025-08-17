@@ -9,16 +9,20 @@ public class ClerkRegistrovaniKlijentDto implements Serializable {
     private String email;
     private String korisnickoIme;
     private String brojTelefona;
+    private String clerkUserId; // ✅ NOVO POLJE
 
     public ClerkRegistrovaniKlijentDto() {
     }
 
-    public ClerkRegistrovaniKlijentDto(String ime, String prezime, String email, String korisnickoIme, String brojTelefona) {
+    public ClerkRegistrovaniKlijentDto(String ime, String prezime, String email,
+                                       String korisnickoIme, String brojTelefona,
+                                       String clerkUserId) {
         this.ime = ime;
         this.prezime = prezime;
         this.email = email;
         this.korisnickoIme = korisnickoIme;
         this.brojTelefona = brojTelefona;
+        this.clerkUserId = clerkUserId;
     }
 
     public String getIme() {
@@ -59,5 +63,13 @@ public class ClerkRegistrovaniKlijentDto implements Serializable {
 
     public void setBrojTelefona(String brojTelefona) {
         this.brojTelefona = brojTelefona;
+    }
+
+    public String getClerkUserId() {
+        return clerkUserId;
+    }
+
+    public void setClerkUserId(String clerkUserId) {
+        this.clerkUserId = clerkUserId;
     }
 }
