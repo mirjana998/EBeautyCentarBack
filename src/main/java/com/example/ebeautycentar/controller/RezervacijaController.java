@@ -1,13 +1,11 @@
 package com.example.ebeautycentar.controller;
 
-import com.example.ebeautycentar.entity.RadnoVrijeme;
-import com.example.ebeautycentar.entity.Rezervacija;
-import com.example.ebeautycentar.entity.SalonUsluga;
-import com.example.ebeautycentar.entity.Zaposleni;
-import com.example.ebeautycentar.service.RadnoVrijemeService;
-import com.example.ebeautycentar.service.RezervacijaService;
-import com.example.ebeautycentar.service.SalonUslugaService;
-import com.example.ebeautycentar.service.ZaposleniService;
+import com.example.ebeautycentar.dto.RezervacijaDto;
+import com.example.ebeautycentar.dto.RezervacijaKlijentDto;
+import com.example.ebeautycentar.dto.SalonDto;
+import com.example.ebeautycentar.dto.ZaposleniDto;
+import com.example.ebeautycentar.entity.*;
+import com.example.ebeautycentar.service.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -31,12 +29,14 @@ public class RezervacijaController {
     public final SalonUslugaService salonUslugaService;
     public final RadnoVrijemeService radnoVrijemeService;
     public final ZaposleniService zaposleniService;
+    private final KorisnikService korisnikService;
 
-    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, ZaposleniService zaposleniService) {
+    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, ZaposleniService zaposleniService, KorisnikService korisnikService) {
         this.rezervacijaService = rezervacijaService;
         this.salonUslugaService = salonUslugaService;
         this.radnoVrijemeService = radnoVrijemeService;
         this.zaposleniService = zaposleniService;
+        this.korisnikService = korisnikService;
     }
 
     public static boolean istiDan(Instant instant1, Instant instant2) {
@@ -157,6 +157,54 @@ public class RezervacijaController {
             return true;
         }
         return false;
+    }
+
+    @PatchMapping("/otkazivanje/{id}")
+    public ResponseEntity<RezervacijaDto> otkaziRezervaciju(@PathVariable Long id, @RequestParam String fleg) {
+        Optional<Rezervacija> rezervacijaOptional = rezervacijaService.getRezervacijaById(id);
+        if(rezervacijaOptional.isPresent()) {
+            if("S".equals(rezervacijaOptional.get().getStatus())) {
+                return ResponseEntity.ok(new RezervacijaDto(rezervacijaOptional.get()));
+            }
+            Rezervacija rezervacija = rezervacijaOptional.get();
+            rezervacija.setStatus("S");
+            if("K".equals(fleg)) {
+                rezervacija.setVrijemeOtkazivanjaKlijent(Instant.now());
+            }else if("V".equals(fleg)) {
+                rezervacija.setVrijemeOtkazivanjaVlasnik(Instant.now());
+            }
+            Rezervacija sacuvana = rezervacijaService.saveRezervacija(rezervacija);
+            return ResponseEntity.ok(new RezervacijaDto(sacuvana));
+
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+        @GetMapping("/klijent")
+    public ResponseEntity<List<RezervacijaKlijentDto>> getRezervacijeKlijenta(@RequestParam String clerkUserId) {
+        Optional<Korisnik> korisnikOptional = korisnikService.findByClerkUserId(clerkUserId);
+        int i = 1;
+        if(korisnikOptional.isPresent()) {
+            List<Rezervacija> rezervacijeKlijenta = rezervacijaService.getRezervacijeKlijenta(korisnikOptional.get().getId());
+            System.out.println(rezervacijeKlijenta.size());
+            List<RezervacijaKlijentDto> rezervacijeKlijentDtos = new ArrayList<>();
+            for(Rezervacija r : rezervacijeKlijenta) {
+                System.out.println(i++);
+                RezervacijaKlijentDto rezervacijaDto = new RezervacijaKlijentDto();
+                rezervacijaDto.setId(r.getId());
+                rezervacijaDto.setSalon(new SalonDto(r.getZaposleniSalonUsluga().getSalonUsluga().getSalon()));
+                rezervacijaDto.setNazivUsluge(r.getZaposleniSalonUsluga().getSalonUsluga().getUsluga().getNaziv());
+                rezervacijaDto.setZaposleni(new ZaposleniDto(r.getZaposleniSalonUsluga().getZaposleni()));
+                rezervacijaDto.setStatusRezervacije(r.getStatus());
+                rezervacijaDto.setVrijemePocetka(r.getTerminPocetkaUsluge());
+                rezervacijaDto.setClerkUserId(korisnikOptional.get().getClerkUserId());
+                rezervacijeKlijentDtos.add(rezervacijaDto);
+            }
+            return ResponseEntity.ok(rezervacijeKlijentDtos);
+        }
+        return ResponseEntity.noContent().build();
+
     }
 
 }

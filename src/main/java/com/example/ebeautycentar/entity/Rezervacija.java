@@ -42,7 +42,7 @@ public class Rezervacija {
     private ZaposleniSalonUsluga zaposleniSalonUsluga;
 
 
-    @Column(name = "`termin_završetka_usluge`", nullable = false)
+    @Column(name = "termin_završetka_usluge")
     private Instant terminZavršetkaUsluge;
 
     public Long getId() {

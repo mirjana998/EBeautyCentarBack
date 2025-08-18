@@ -49,19 +49,6 @@ public class KorisnikService {
         return korisnikRepository.findByStatus("A");
     }
 
-    /*
-    public Bicycle updateBicycle(Integer id, Bicycle bicycle) {
-        Optional<Bicycle> existingBicycle = bicycleRepository.findById(id);
-        Bicycle b = new Bicycle();
-        if (existingBicycle.isPresent()) {
-            b.setId(bicycle.getId());
-            b.setVehicle(bicycle.getVehicle());
-            b.setAutonomy(bicycle.getAutonomy());
-        }
-        return bicycleRepository.save(b);
-    }
-    */
-
     public Optional<Korisnik> findByEmail(String email) {
         return korisnikRepository.findByEmail(email);
     }
