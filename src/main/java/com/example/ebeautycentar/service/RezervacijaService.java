@@ -67,4 +67,8 @@ public class RezervacijaService {
     public List<Rezervacija> getRezervacijaByZaposleniId(Long zaposleniId) {
        return rezervacijaRepository.findByZaposleniId(zaposleniId, "I");
     }
+
+    public List<Rezervacija> getRezervacijeKlijenta(Long id) {
+        return rezervacijaRepository.findByRegistrovaniKlijentId(id);
+    }
 }
