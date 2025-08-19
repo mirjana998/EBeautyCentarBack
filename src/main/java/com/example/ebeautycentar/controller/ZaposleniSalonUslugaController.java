@@ -27,14 +27,4 @@ public class ZaposleniSalonUslugaController {
         return zaposleniSalonUslugaService.getAllZaposleniSalonUsluga();
     }
 
-    @GetMapping("/{zaposleniId}/{salonUslugaId}")
-    public ResponseEntity<ZaposleniSalonUslugaDto> getZaposleniSalonUslugaById(@PathVariable Long zaposleniId, @PathVariable Long salonUslugaId) {
-        Optional<ZaposleniSalonUsluga> zaposleniSalonUsluga = zaposleniSalonUslugaService.getZaposleniSalonUslugaById(salonUslugaId, zaposleniId);
-        if(zaposleniSalonUsluga.isPresent()) {
-            ZaposleniSalonUslugaDto zaposleniSalonUslugaDto = new ZaposleniSalonUslugaDto(zaposleniSalonUsluga.get());
-            return ResponseEntity.ok(zaposleniSalonUslugaDto);
-        }else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }
