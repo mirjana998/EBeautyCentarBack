@@ -1,6 +1,8 @@
 package com.example.ebeautycentar.dto;
 
 import com.example.ebeautycentar.entity.Rezervacija;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -21,7 +23,19 @@ public class RezervacijaDto implements Serializable {
     private final Long zaposleniSalonUslugaId;
     private final Instant terminZavršetkaUsluge;
 
-    public RezervacijaDto(Long id, Instant vrijemeZakazivanja, String status, Instant vrijemeOtkazivanjaVlasnik, Instant vrijemeOtkazivanjaKlijent, Long vlasnikSalonaId, Instant terminPocetkaUsluge, Long registrovaniKlijentId, Long zaposleniSalonUslugaId, Instant terminZavršetkaUsluge) {
+    @JsonCreator
+    public RezervacijaDto(
+            @JsonProperty("id") Long id,
+            @JsonProperty("vrijemeZakazivanja") Instant vrijemeZakazivanja,
+            @JsonProperty("status") String status,
+            @JsonProperty("vrijemeOtkazivanjaVlasnik") Instant vrijemeOtkazivanjaVlasnik,
+            @JsonProperty("vrijemeOtkazivanjaKlijent") Instant vrijemeOtkazivanjaKlijent,
+            @JsonProperty("vlasnikSalonaId") Long vlasnikSalonaId,
+            @JsonProperty("terminPocetkaUsluge") Instant terminPocetkaUsluge,
+            @JsonProperty("registrovaniKlijentId") Long registrovaniKlijentId,
+            @JsonProperty("zaposleniSalonUslugaId") Long zaposleniSalonUslugaId,
+            @JsonProperty("terminZavršetkaUsluge") Instant terminZavršetkaUsluge
+    ) {
         this.id = id;
         this.vrijemeZakazivanja = vrijemeZakazivanja;
         this.status = status;

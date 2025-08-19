@@ -32,8 +32,8 @@ public class ZaposleniSalonUslugaService {
     }
 
 
-    public Optional<ZaposleniSalonUsluga> getZaposleniSalonUslugaById(Long salonUslugaId, Long zaposleniId) {
-        return zaposleniSalonUslugaRepository.findZaposleniSalonUslugaByZaposleniIdAndSalonUslugaId(zaposleniId,salonUslugaId);
+    public Optional<ZaposleniSalonUsluga> getZaposleniSalonUslugaById(Long id) {
+        return zaposleniSalonUslugaRepository.findById(id);
     }
 
 
@@ -41,7 +41,4 @@ public class ZaposleniSalonUslugaService {
         return zaposleniSalonUslugaRepository.save(zaposleniSalonUsluga);
     }
 
-//    public void deleteSalonUsluga(Long id) {
-//        zaposleniSalonUslugaRepository.deleteById(id);
-//    }
 }

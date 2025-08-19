@@ -1,11 +1,9 @@
 package com.example.ebeautycentar.controller;
 
-import com.example.ebeautycentar.dto.RezervacijaDto;
-import com.example.ebeautycentar.dto.RezervacijaKlijentDto;
-import com.example.ebeautycentar.dto.SalonDto;
-import com.example.ebeautycentar.dto.ZaposleniDto;
+import com.example.ebeautycentar.dto.*;
 import com.example.ebeautycentar.entity.*;
 import com.example.ebeautycentar.service.*;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -30,13 +28,19 @@ public class RezervacijaController {
     public final RadnoVrijemeService radnoVrijemeService;
     public final ZaposleniService zaposleniService;
     private final KorisnikService korisnikService;
+    private final RegistrovaniKlijentService registrovaniKlijentService;
+    private final VlasnikSalonaService vlasnikSalonaService;
+    private final ZaposleniSalonUslugaService zaposleniSalonUslugaService;
 
-    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, ZaposleniService zaposleniService, KorisnikService korisnikService) {
+    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, ZaposleniService zaposleniService, KorisnikService korisnikService, RegistrovaniKlijentService registrovaniKlijentService, VlasnikSalonaService vlasnikSalonaService, ZaposleniSalonUslugaService zaposleniSalonUslugaService) {
         this.rezervacijaService = rezervacijaService;
         this.salonUslugaService = salonUslugaService;
         this.radnoVrijemeService = radnoVrijemeService;
         this.zaposleniService = zaposleniService;
         this.korisnikService = korisnikService;
+        this.registrovaniKlijentService = registrovaniKlijentService;
+        this.vlasnikSalonaService = vlasnikSalonaService;
+        this.zaposleniSalonUslugaService = zaposleniSalonUslugaService;
     }
 
     public static boolean istiDan(Instant instant1, Instant instant2) {
@@ -205,6 +209,38 @@ public class RezervacijaController {
         }
         return ResponseEntity.noContent().build();
 
+    }
+
+    @PostMapping
+    public ResponseEntity<RezervacijaDto> dodavanjeNoveRezervacije(@RequestBody RezervacijaDto rezervacijaDto) {
+        Rezervacija novaRezervacija = new Rezervacija();
+        novaRezervacija.setStatus("I");
+        novaRezervacija.setVrijemeZakazivanja(Instant.now());
+        novaRezervacija.setTerminPocetkaUsluge(rezervacijaDto.getTerminPocetkaUsluge());
+        Optional<RegistrovaniKlijent> registrovaniKlijent = registrovaniKlijentService.getRegistrovaniKlijentById(rezervacijaDto.getRegistrovaniKlijentId());
+        Optional<VlasnikSalona> vlasnikSalona = vlasnikSalonaService.getVlasnikSalonaById(rezervacijaDto.getVlasnikSalonaId());
+        Optional<ZaposleniSalonUsluga> zaposleniSalonUsluga = zaposleniSalonUslugaService.getZaposleniSalonUslugaById(rezervacijaDto.getZaposleniSalonUslugaId());
+        if(vlasnikSalona.isPresent() && registrovaniKlijent.isPresent() && zaposleniSalonUsluga.isPresent()) {
+            novaRezervacija.setRegistrovaniKlijent(registrovaniKlijent.get());
+            novaRezervacija.setVlasnikSalona(vlasnikSalona.get());
+            novaRezervacija.setZaposleniSalonUsluga(zaposleniSalonUsluga.get());
+            Rezervacija sacuvanaRezervacija = rezervacijaService.saveRezervacija(novaRezervacija);
+            return ResponseEntity.ok(new RezervacijaDto(sacuvanaRezervacija));
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> obrisiRezervaciju(@PathVariable Long id) {
+        System.out.println("Rezervacija id: " + id);
+        Optional<Rezervacija> rezervacija = rezervacijaService.getRezervacijaById(id);
+        if(rezervacija.isPresent()) {
+            rezervacijaService.deleteRezevacija(id);
+            return ResponseEntity.ok("Uspjesno brisanje!");
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Neupjesno brisanje!");
+        }
     }
 
 }
