@@ -5,15 +5,17 @@ public class RezervacijaSalonDto {
     private String prezimeKlijenta;
     private String nazivUsluge;
     private Double cijena;
+    private boolean placeno;
 
     public RezervacijaSalonDto() {
     }
 
-    public RezervacijaSalonDto(String imeKlijenta, String prezimeKlijenta, String nazivUsluge, Double cijena) {
+    public RezervacijaSalonDto(String imeKlijenta, String prezimeKlijenta, String nazivUsluge, Double cijena, boolean placeno) {
         this.imeKlijenta = imeKlijenta;
         this.prezimeKlijenta = prezimeKlijenta;
         this.nazivUsluge = nazivUsluge;
         this.cijena = cijena;
+        this.placeno=placeno;
     }
 
     public String getImeKlijenta() {
@@ -46,5 +48,13 @@ public class RezervacijaSalonDto {
 
     public void setCijena(Double cijena) {
         this.cijena = cijena;
+    }
+
+    public boolean isPlaceno() {
+        return placeno;
+    }
+
+    public void setPlaceno(boolean placeno) {
+        this.placeno = placeno;
     }
 }

@@ -75,14 +75,12 @@ public class SalonUslugaService {
         Usluga usluga = uslugaRepository.findByNaziv(dto.getNazivUsluge())
                 .orElseThrow(() -> new RuntimeException("Usluga nije pronađena"));
 
-        // Formiramo entitet za insert
         SalonUsluga nova = new SalonUsluga();
         nova.setSalon(salon);
         nova.setUsluga(usluga);
         nova.setTrajanjeUsluge(dto.getTrajanje_usluge());
         nova.setCijena(dto.getCijena());
         nova.setOpis(dto.getOpis());
-        // Postavljamo defaultne vrijednosti
         nova.setDatumPocetka(null);
         nova.setDatumKraja(null);
         nova.setStatus("A");

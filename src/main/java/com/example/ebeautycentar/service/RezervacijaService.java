@@ -5,6 +5,7 @@ import com.example.ebeautycentar.dto.RezervacijaDto;
 import com.example.ebeautycentar.dto.RezervacijaSalonDto;
 import com.example.ebeautycentar.entity.Rezervacija;
 import com.example.ebeautycentar.repository.RezervacijaRepository;
+import com.example.ebeautycentar.repository.TransakcijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,12 @@ public class RezervacijaService {
 
     @Autowired
     private final RezervacijaRepository rezervacijaRepository;
+    private final TransakcijaRepository transakcijaRepository;
 
     @Autowired
-    public RezervacijaService(RezervacijaRepository rezervacijaRepository) {
+    public RezervacijaService(RezervacijaRepository rezervacijaRepository,TransakcijaRepository transakcijaRepository) {
         this.rezervacijaRepository = rezervacijaRepository;
+        this.transakcijaRepository=transakcijaRepository;
     }
 
     public List<RezervacijaDto> getAllRezervacija() {
@@ -60,7 +63,11 @@ public class RezervacijaService {
             String nazivUsluge=r.getZaposleniSalonUsluga().getSalonUsluga().getUsluga().getNaziv();
             Double cijena=r.getZaposleniSalonUsluga().getSalonUsluga().getCijena();
 
-            return new RezervacijaSalonDto(ime, prezime, nazivUsluge, cijena);
+            boolean placeno = transakcijaRepository.findByRezervacijaId(r.getId())
+                    .map(t -> "I".equalsIgnoreCase(t.getStatus()))
+                    .orElse(false);
+
+            return new RezervacijaSalonDto(ime, prezime, nazivUsluge, cijena,placeno);
         }).toList();
     }
 

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransakcijaRepository extends JpaRepository<Transakcija, Long> {
 
@@ -21,5 +22,6 @@ public interface TransakcijaRepository extends JpaRepository<Transakcija, Long> 
     and tr.status= :status
     """, nativeQuery = true)
   List<Transakcija> findAllBySalonId(@Param("salon_id") Long salonId, @Param("status") String status);
+  Optional<Transakcija> findByRezervacijaId(Long rezervacijaId);
 
 }
