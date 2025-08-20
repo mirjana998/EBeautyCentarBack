@@ -29,19 +29,21 @@ public class TransakcijaController {
 
     @PostMapping("/dodaj")
     public ResponseEntity<TransakcijaDto> dodajTransakciju(@RequestBody TransakcijaStripeDto transakcijaDto) {
-        System.out.println(transakcijaDto);
+        System.out.println("Primljeno: " + transakcijaDto);
+
         Optional<Rezervacija> rezervacijaOptional = rezervacijaService.getRezervacijaById(transakcijaDto.getRezervacijaId());
-        if (rezervacijaOptional.isPresent()) {
-            Transakcija transakcija = new Transakcija();
-            transakcija.setValuta(transakcijaDto.getValuta());
-            transakcija.setRezervacija(rezervacijaOptional.get());
-            transakcija.setIznos(transakcijaDto.getUkupanIznos());
-            transakcija.setDatumTransakcije(transakcijaDto.getDatumTransakcije());
-            transakcija.setStatus(transakcijaDto.getStatus());
-            return ResponseEntity.ok(transakcijaService.dodajTransakciju(transakcija));
-        }else {
+        if (rezervacijaOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        Transakcija transakcija = new Transakcija();
+        transakcija.setValuta(transakcijaDto.getValuta());
+        transakcija.setIznos(transakcijaDto.getUkupanIznos());
+        transakcija.setDatumTransakcije(transakcijaDto.getDatumTransakcije());
+        transakcija.setStatus(transakcijaDto.getStatus());
+        transakcija.setRezervacija(rezervacijaOptional.get());
+
+        return ResponseEntity.ok(transakcijaService.dodajTransakciju(transakcija));
     }
 
 

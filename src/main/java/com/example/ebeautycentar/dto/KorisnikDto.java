@@ -17,7 +17,7 @@ public class KorisnikDto implements Serializable {
     private final String korisnickoIme;
     private final String lozinka;
     private final String status;
-    private final String clerkUserId; // ✅ novo polje
+    private final String clerkUserId;
 
     public KorisnikDto(Long id, String ime, String prezime, String brojTelefona,
                        String email, String korisnickoIme, String lozinka,

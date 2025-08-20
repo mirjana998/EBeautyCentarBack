@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ZaposleniSalonUslugaRepository extends JpaRepository<ZaposleniSalonUsluga, Long> {
 
-    Optional<ZaposleniSalonUsluga> findZaposleniSalonUslugaByZaposleniIdAndSalonUslugaId(Long zaposleniId, Long salonUslugaId);
+    Optional<ZaposleniSalonUsluga> findByZaposleni_IdAndSalonUsluga_Id(Long zaposleniId, Long salonUslugaId);
+
 }

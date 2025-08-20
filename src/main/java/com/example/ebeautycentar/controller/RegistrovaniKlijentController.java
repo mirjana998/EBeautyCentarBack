@@ -122,7 +122,6 @@ public class RegistrovaniKlijentController {
     }
 
 
-
     @PostMapping("/delete")
     public ResponseEntity<Void> deactivateAndDeleteByEmail(@RequestBody Map<String, String> body) {
         try {
@@ -143,6 +142,29 @@ public class RegistrovaniKlijentController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    @GetMapping("/by-clerk/{clerkUserId}")
+    public ResponseEntity<RegistrovaniKlijentDto> getRegistrovaniKlijentByClerk(@PathVariable String clerkUserId) {
+        Optional<Korisnik> korisnikOpt = korisnikService.findByClerkUserId(clerkUserId);
+        if (korisnikOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Korisnik korisnik = korisnikOpt.get();
+
+        Optional<RegistrovaniKlijent> registrovaniOpt =
+                registrovaniKlijentService.getByKorisnikId(korisnik.getId());
+
+        if (registrovaniOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RegistrovaniKlijentDto dto = new RegistrovaniKlijentDto(registrovaniOpt.get());
+        return ResponseEntity.ok(dto);
+    }
+
+
+
 
 }
 

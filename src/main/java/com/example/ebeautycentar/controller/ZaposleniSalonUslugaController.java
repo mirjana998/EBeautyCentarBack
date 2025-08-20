@@ -27,4 +27,15 @@ public class ZaposleniSalonUslugaController {
         return zaposleniSalonUslugaService.getAllZaposleniSalonUsluga();
     }
 
+    @GetMapping("/{zaposleniId}/{uslugaId}")
+    public ResponseEntity<ZaposleniSalonUslugaDto> getByZaposleniIdAndUslugaId(
+            @PathVariable Long zaposleniId,
+            @PathVariable Long uslugaId) {
+
+        return zaposleniSalonUslugaService.getByZaposleniIdAndUslugaId(zaposleniId, uslugaId)
+                .map(zsu -> ResponseEntity.ok(new ZaposleniSalonUslugaDto(zsu)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
 }
