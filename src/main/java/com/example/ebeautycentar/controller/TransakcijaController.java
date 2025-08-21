@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8081"})
 @RestController
 @RequestMapping("/transakcija")
 public class TransakcijaController {
@@ -36,15 +36,23 @@ public class TransakcijaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+        Rezervacija rezervacija = rezervacijaOptional.get();
+
         Transakcija transakcija = new Transakcija();
         transakcija.setValuta(transakcijaDto.getValuta());
         transakcija.setIznos(transakcijaDto.getUkupanIznos());
         transakcija.setDatumTransakcije(transakcijaDto.getDatumTransakcije());
-        transakcija.setStatus(transakcijaDto.getStatus());
-        transakcija.setRezervacija(rezervacijaOptional.get());
+        transakcija.setStatus("I");
+        transakcija.setRezervacija(rezervacija);
 
-        return ResponseEntity.ok(transakcijaService.dodajTransakciju(transakcija));
+        TransakcijaDto savedTransakcija = transakcijaService.dodajTransakciju(transakcija);
+
+        rezervacija.setStatus("P");
+        rezervacijaService.saveRezervacija(rezervacija);
+
+        return ResponseEntity.ok(savedTransakcija);
     }
+
 
 
 }

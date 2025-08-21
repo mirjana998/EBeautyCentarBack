@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -195,8 +192,19 @@ public class RezervacijaController {
             System.out.println(rezervacijeKlijenta.size());
             List<RezervacijaKlijentDto> rezervacijeKlijentDtos = new ArrayList<>();
             rezervacijeKlijenta.sort(
-                    Comparator.comparing(Rezervacija::getTerminPocetkaUsluge).reversed()
+                    Comparator
+                            .comparing((Rezervacija r) -> {
+                                return switch (r.getStatus()) {
+                                    case "P" -> 1;
+                                    case "Z" -> 2;
+                                    case "S" -> 3;
+                                    case "I" -> 4;
+                                    default -> 5;
+                                };
+                            })
+                            .thenComparing(Rezervacija::getTerminPocetkaUsluge, Comparator.reverseOrder())
             );
+
             for(Rezervacija r : rezervacijeKlijenta) {
                 System.out.println(i++);
                 RezervacijaKlijentDto rezervacijaDto = new RezervacijaKlijentDto();
@@ -256,6 +264,17 @@ public class RezervacijaController {
             novaRezervacija.setZaposleniSalonUsluga(zaposleniSalonUsluga.get());
 
             Rezervacija sacuvanaRezervacija = rezervacijaService.saveRezervacija(novaRezervacija);
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Optional<Rezervacija> provjeri = rezervacijaService.getRezervacijaById(sacuvanaRezervacija.getId());
+                    if (provjeri.isPresent() && "I".equals(provjeri.get().getStatus())) {
+                        rezervacijaService.deleteRezevacija(sacuvanaRezervacija.getId());
+                        System.out.println("Obrisana rezervacija jer nije plaćena: " + sacuvanaRezervacija.getId());
+                    }
+                }
+            }, 2 * 60 * 1000);
             return ResponseEntity.ok(new RezervacijaDto(sacuvanaRezervacija));
         } else {
             return ResponseEntity.notFound().build();
