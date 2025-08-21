@@ -40,5 +40,11 @@ public class ZaposleniSalonUslugaService {
     public ZaposleniSalonUsluga saveZaposleniSalonUsluga(ZaposleniSalonUsluga zaposleniSalonUsluga) {
         return zaposleniSalonUslugaRepository.save(zaposleniSalonUsluga);
     }
+    public Optional<ZaposleniSalonUsluga> getByZaposleniIdAndUslugaId(Long zaposleniId, Long uslugaId) {
+        return zaposleniSalonUslugaRepository.findByZaposleni_IdAndSalonUsluga_Id(zaposleniId, uslugaId);
+    }
+
+
+
 
 }

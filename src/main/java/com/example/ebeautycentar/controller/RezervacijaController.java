@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -193,6 +191,20 @@ public class RezervacijaController {
             List<Rezervacija> rezervacijeKlijenta = rezervacijaService.getRezervacijeKlijenta(korisnikOptional.get().getId());
             System.out.println(rezervacijeKlijenta.size());
             List<RezervacijaKlijentDto> rezervacijeKlijentDtos = new ArrayList<>();
+            rezervacijeKlijenta.sort(
+                    Comparator
+                            .comparing((Rezervacija r) -> {
+                                return switch (r.getStatus()) {
+                                    case "P" -> 1;
+                                    case "Z" -> 2;
+                                    case "S" -> 3;
+                                    case "I" -> 4;
+                                    default -> 5;
+                                };
+                            })
+                            .thenComparing(Rezervacija::getTerminPocetkaUsluge, Comparator.reverseOrder())
+            );
+
             for(Rezervacija r : rezervacijeKlijenta) {
                 System.out.println(i++);
                 RezervacijaKlijentDto rezervacijaDto = new RezervacijaKlijentDto();
@@ -212,24 +224,63 @@ public class RezervacijaController {
     }
 
     @PostMapping
-    public ResponseEntity<RezervacijaDto> dodavanjeNoveRezervacije(@RequestBody RezervacijaDto rezervacijaDto) {
-        Rezervacija novaRezervacija = new Rezervacija();
-        novaRezervacija.setStatus("I");
-        novaRezervacija.setVrijemeZakazivanja(Instant.now());
-        novaRezervacija.setTerminPocetkaUsluge(rezervacijaDto.getTerminPocetkaUsluge());
+    public ResponseEntity<?> dodavanjeNoveRezervacije(@RequestBody RezervacijaDto rezervacijaDto) {
         Optional<RegistrovaniKlijent> registrovaniKlijent = registrovaniKlijentService.getRegistrovaniKlijentById(rezervacijaDto.getRegistrovaniKlijentId());
         Optional<VlasnikSalona> vlasnikSalona = vlasnikSalonaService.getVlasnikSalonaById(rezervacijaDto.getVlasnikSalonaId());
         Optional<ZaposleniSalonUsluga> zaposleniSalonUsluga = zaposleniSalonUslugaService.getZaposleniSalonUslugaById(rezervacijaDto.getZaposleniSalonUslugaId());
+
         if(vlasnikSalona.isPresent() && registrovaniKlijent.isPresent() && zaposleniSalonUsluga.isPresent()) {
+
+            SalonUsluga usluga = zaposleniSalonUsluga.get().getSalonUsluga();
+            Instant pocetak = rezervacijaDto.getTerminPocetkaUsluge();
+            Instant kraj = pocetak
+                    .plus(usluga.getTrajanjeUsluge().getHour(), ChronoUnit.HOURS)
+                    .plus(usluga.getTrajanjeUsluge().getMinute(), ChronoUnit.MINUTES)
+                    .plus(usluga.getTrajanjeUsluge().getSecond(), ChronoUnit.SECONDS);
+
+            List<Rezervacija> rezervacijeKlijenta = rezervacijaService.getRezervacijeKlijenta(registrovaniKlijent.get().getId());
+
+
+            List<Rezervacija> rezervacijeIstiDan = rezervacijeKlijenta.stream()
+                    .filter(r -> istiDan(r.getTerminPocetkaUsluge(), pocetak))
+                    .toList();
+
+
+            boolean imaPreklapanje = rezervacijeIstiDan.stream()
+                    .anyMatch(r -> uporediVremenaRezervacije(r, pocetak, kraj));
+
+            if (imaPreklapanje) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Klijent već ima rezervaciju u tom terminu!");
+            }
+
+
+            Rezervacija novaRezervacija = new Rezervacija();
+            novaRezervacija.setStatus("I");
+            novaRezervacija.setVrijemeZakazivanja(Instant.now());
+            novaRezervacija.setTerminPocetkaUsluge(pocetak);
             novaRezervacija.setRegistrovaniKlijent(registrovaniKlijent.get());
             novaRezervacija.setVlasnikSalona(vlasnikSalona.get());
             novaRezervacija.setZaposleniSalonUsluga(zaposleniSalonUsluga.get());
+
             Rezervacija sacuvanaRezervacija = rezervacijaService.saveRezervacija(novaRezervacija);
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Optional<Rezervacija> provjeri = rezervacijaService.getRezervacijaById(sacuvanaRezervacija.getId());
+                    if (provjeri.isPresent() && "I".equals(provjeri.get().getStatus())) {
+                        rezervacijaService.deleteRezevacija(sacuvanaRezervacija.getId());
+                        System.out.println("Obrisana rezervacija jer nije plaćena: " + sacuvanaRezervacija.getId());
+                    }
+                }
+            }, 2 * 60 * 1000);
             return ResponseEntity.ok(new RezervacijaDto(sacuvanaRezervacija));
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> obrisiRezervaciju(@PathVariable Long id) {

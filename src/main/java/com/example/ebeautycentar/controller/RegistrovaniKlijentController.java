@@ -73,21 +73,20 @@ public class RegistrovaniKlijentController {
                 korisnik.setKorisnickoIme(noviKlijent.getKorisnickoIme());
                 korisnik.setBrojTelefona(noviKlijent.getBrojTelefona());
                 korisnik.setEmail(noviKlijent.getEmail());
-                korisnik.setStatus("A"); // ako je bio D, aktivira se
+                korisnik.setStatus("A");
                 korisnik = korisnikService.saveKorisnik(korisnik);
 
             } else {
-                // 2. provjera po emailu (ako postoji sa statusom D → reaktiviraj)
+                // 2. provjera po emailu (ako postoji sa statusom D reaktiviraj)
                 Optional<Korisnik> korisnikPoEmailu = korisnikService.findByEmail(noviKlijent.getEmail());
                 if (korisnikPoEmailu.isPresent()) {
                     korisnik = korisnikPoEmailu.get();
-                    // update podataka i reaktivacija
                     korisnik.setIme(noviKlijent.getIme());
                     korisnik.setPrezime(noviKlijent.getPrezime());
                     korisnik.setKorisnickoIme(noviKlijent.getKorisnickoIme());
                     korisnik.setBrojTelefona(noviKlijent.getBrojTelefona());
-                    korisnik.setClerkUserId(noviKlijent.getClerkUserId()); // sad ga vežeš za Clerk
-                    korisnik.setStatus("A"); // ponovo aktiviraj
+                    korisnik.setClerkUserId(noviKlijent.getClerkUserId());
+                    korisnik.setStatus("A");
                     korisnik = korisnikService.saveKorisnik(korisnik);
 
                 } else {
@@ -122,7 +121,6 @@ public class RegistrovaniKlijentController {
     }
 
 
-
     @PostMapping("/delete")
     public ResponseEntity<Void> deactivateAndDeleteByEmail(@RequestBody Map<String, String> body) {
         try {
@@ -143,6 +141,29 @@ public class RegistrovaniKlijentController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    @GetMapping("/by-clerk/{clerkUserId}")
+    public ResponseEntity<RegistrovaniKlijentDto> getRegistrovaniKlijentByClerk(@PathVariable String clerkUserId) {
+        Optional<Korisnik> korisnikOpt = korisnikService.findByClerkUserId(clerkUserId);
+        if (korisnikOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Korisnik korisnik = korisnikOpt.get();
+
+        Optional<RegistrovaniKlijent> registrovaniOpt =
+                registrovaniKlijentService.getByKorisnikId(korisnik.getId());
+
+        if (registrovaniOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RegistrovaniKlijentDto dto = new RegistrovaniKlijentDto(registrovaniOpt.get());
+        return ResponseEntity.ok(dto);
+    }
+
+
+
 
 }
 

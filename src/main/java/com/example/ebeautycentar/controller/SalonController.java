@@ -38,20 +38,24 @@ public class SalonController {
     public ResponseEntity<SalonDto> getSalonById(@PathVariable Long id) {
         Optional<Salon> salon = salonService.getSalonById(id);
         if (salon.isPresent()) {
+            // galerija
             List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.get().getId(), "G");
             List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
+
+            // naslovna
             List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.get().getId(), "N");
-            Slika naslovnaSlika = null;
-            if (galerijaSlika != null && !galerijaSlika.isEmpty()) {
-                naslovnaSlika = galerijaSlika.get(0);
+            String naslovnaSlikaNaziv = null;
+            if (naslovne != null && !naslovne.isEmpty()) {
+                naslovnaSlikaNaziv = naslovne.get(0).getNaziv();
             }
 
-            SalonDto salonDto = new SalonDto(salon.get(),naslovnaSlika.getNaziv(),galerija);
+            SalonDto salonDto = new SalonDto(salon.get(), naslovnaSlikaNaziv, galerija);
             return ResponseEntity.ok(salonDto);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSalon(@PathVariable Long id) {
