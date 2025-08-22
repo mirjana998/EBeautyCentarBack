@@ -1,11 +1,13 @@
 package com.example.ebeautycentar.repository;
 
 import com.example.ebeautycentar.entity.OcjenaPru탑eneUsluge;
+import com.example.ebeautycentar.entity.Rezervacija;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OcjenaPru탑eneUslugeRepository extends JpaRepository<OcjenaPru탑eneUsluge, Long> {
 
@@ -18,4 +20,6 @@ public interface OcjenaPru탑eneUslugeRepository extends JpaRepository<OcjenaPru�
     where s.id = :salon_id;
     """, nativeQuery = true)
     List<OcjenaPru탑eneUsluge> findAllBySalonId(@Param("salon_id") Long salonId);
+
+    Optional<OcjenaPru탑eneUsluge> findByRezervacijaId(Long id);
 }

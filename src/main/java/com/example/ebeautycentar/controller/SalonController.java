@@ -79,75 +79,19 @@ public class SalonController {
     }
 
 
-        /*
-        if("".equals(grad)&& "".equals(usluga)&&!"".equals(naziv))
-        {
-            List<SalonDto> saloni = salonService.findByNazivAndStatus(naziv,"A");
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-        else if("".equals(usluga)&&"".equals(naziv)&&!"".equals(grad))
-            {
-                List<SalonDto> saloni = salonService.findByGradAndStatus(grad,"A");
-                if (saloni.isEmpty()) {
-                    return ResponseEntity.noContent().build();
-                }
-                return ResponseEntity.ok(saloni);
-
-            }
-        else if("".equals(grad)&&"".equals(naziv)&&!"".equals(usluga)){
-            List<SalonDto> saloni = salonService.findByUslugaAndStatus(usluga,"A");
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-        else if(!("".equals(grad)) &&!("".equals(usluga)) && "".equals(naziv)) {
-            List<SalonDto> saloni = salonService.getSaloniByLokacijaIUsluga(grad, usluga);
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-        else if(!("".equals(grad)) && !("".equals(naziv)) && "".equals(usluga))
-        {
-            List<SalonDto> saloni = salonService.getSaloniByGradINaziv(grad, naziv);
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-        else if(!("".equals(usluga)) && !("".equals(naziv)) && "".equals(grad))
-        {
-            List<SalonDto>saloni=salonService.getSaloniByUslugaAndNaziv(usluga,naziv);
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-        else if(!("".equals(grad))&&!("".equals(naziv))&&!("".equals(usluga)))
-        {
-            List<SalonDto>saloni=salonService.getSaloniByGradAndUslugaAndNaziv(grad,usluga,naziv);
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-        else
-        {
-            List<SalonDto>saloni=salonService.getAllSalon();
-            if (saloni.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(saloni);
-        }
-    }*/
-
     @GetMapping("/popularni")
     public ResponseEntity<List<SalonDto>> getPopularniSaloni() {
         List<SalonDto>saloni=salonService.getPopularniSaloni();
+
+        for (SalonDto salon : saloni) {
+            List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.getId(), "G");
+            List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
+            List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.getId(), "N");
+            salon.setGalerijaSlika(galerija);
+            if(!naslovne.isEmpty()) {
+                salon.setNaslovnaSlika(naslovne.get(0).getNaziv());
+            }
+        }
         if (saloni.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else if(saloni.size()<4) {

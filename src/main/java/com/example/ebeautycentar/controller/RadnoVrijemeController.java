@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,17 @@ public class RadnoVrijemeController {
         }else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/salon")
+    public ResponseEntity<List<RadnoVrijemeDto>> getRadnoVrijemeBySalonId(@RequestParam Long id) {
+        List<RadnoVrijeme> radnoVrijemeList = radnoVrijemeService.findBySalonId(id);
+        List<RadnoVrijemeDto> radnoVrijemeDtoList = new ArrayList<>();
+        for(RadnoVrijeme radnoVrijeme : radnoVrijemeList) {
+            radnoVrijemeDtoList.add(new RadnoVrijemeDto(radnoVrijeme));
+        }
+        return ResponseEntity.ok(radnoVrijemeDtoList);
+
     }
 
 }

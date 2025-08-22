@@ -72,7 +72,7 @@ public class RezervacijaService {
     }
 
     public List<Rezervacija> getRezervacijaByZaposleniId(Long zaposleniId) {
-       return rezervacijaRepository.findByZaposleniId(zaposleniId, "I");
+       return rezervacijaRepository.findByZaposleniId(zaposleniId, "I","P");
     }
 
     public List<Rezervacija> getRezervacijeKlijenta(Long id) {

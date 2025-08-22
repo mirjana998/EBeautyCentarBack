@@ -29,9 +29,9 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> 
         join salon_usluga su 
             on zsu.salon_usluga_id = su.id
         where zsu.zaposleni_id= :zaposleniId
-        and rez.status = :status
+        and (rez.status = :status or  rez.status = :status_p)
     """, nativeQuery = true)
-    List<Rezervacija> findByZaposleniId(@Param("zaposleniId") Long zaposleniId, @Param("status") String status);
+    List<Rezervacija> findByZaposleniId(@Param("zaposleniId") Long zaposleniId, @Param("status") String status, @Param("status_p") String status_p);
 
     @Query(value= """
         select rez.*

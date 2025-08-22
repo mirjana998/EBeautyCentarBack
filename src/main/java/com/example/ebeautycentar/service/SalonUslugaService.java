@@ -46,13 +46,8 @@ public class SalonUslugaService {
         return salonUslugaRepository.findById(id);
     }
 
-    public List<SalonUslugaDto> getSalonUslugaBySalonId(Long id) {
-        List<SalonUsluga> salonUsluge = salonUslugaRepository.findBySalonId(id);
-        List<SalonUslugaDto> salonUslugaDtoList = new ArrayList<>();
-        for(SalonUsluga s : salonUsluge) {
-            salonUslugaDtoList.add(new SalonUslugaDto(s));
-        }
-        return salonUslugaDtoList;
+    public List<SalonUsluga> getSalonUslugaBySalonId(Long id) {
+        return  salonUslugaRepository.findBySalonId(id);
     }
 
 

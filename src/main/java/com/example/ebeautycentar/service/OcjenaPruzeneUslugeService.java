@@ -46,14 +46,14 @@ public class OcjenaPruzeneUslugeService {
     }
 
 
+    public Optional<OcjenaPruženeUsluge> getOcjenaPruženeUslugeByRezervacijaId(Long id) {
+        return ocjenaPruženeUslugeRepository.findByRezervacijaId(id);
+    }
 
-    public OcjenaPruženeUsluge saveOcjenaPruženeUsluge(OcjenaPruženeUsluge ocjenaPruženeUsluge) {
+    public OcjenaPruženeUsluge sacuvaj(OcjenaPruženeUsluge ocjenaPruženeUsluge) {
         return ocjenaPruženeUslugeRepository.save(ocjenaPruženeUsluge);
     }
 
-    public void deleteOcjena(Long id) {
-        ocjenaPruženeUslugeRepository.deleteById(id);
-    }
 
 
 }
