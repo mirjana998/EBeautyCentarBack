@@ -29,8 +29,10 @@ public class RezervacijaController {
     private final RegistrovaniKlijentService registrovaniKlijentService;
     private final VlasnikSalonaService vlasnikSalonaService;
     private final ZaposleniSalonUslugaService zaposleniSalonUslugaService;
+    private final SlikaService slikaService;
+    private final OcjenaPruzeneUslugeService ocjenaPruzeneUslugeService;
 
-    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, ZaposleniService zaposleniService, KorisnikService korisnikService, RegistrovaniKlijentService registrovaniKlijentService, VlasnikSalonaService vlasnikSalonaService, ZaposleniSalonUslugaService zaposleniSalonUslugaService) {
+    public RezervacijaController(RezervacijaService rezervacijaService, SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, ZaposleniService zaposleniService, KorisnikService korisnikService, RegistrovaniKlijentService registrovaniKlijentService, VlasnikSalonaService vlasnikSalonaService, ZaposleniSalonUslugaService zaposleniSalonUslugaService, SlikaService slikaService, OcjenaPruzeneUslugeService ocjenaPruzeneUslugeService) {
         this.rezervacijaService = rezervacijaService;
         this.salonUslugaService = salonUslugaService;
         this.radnoVrijemeService = radnoVrijemeService;
@@ -39,6 +41,8 @@ public class RezervacijaController {
         this.registrovaniKlijentService = registrovaniKlijentService;
         this.vlasnikSalonaService = vlasnikSalonaService;
         this.zaposleniSalonUslugaService = zaposleniSalonUslugaService;
+        this.slikaService = slikaService;
+        this.ocjenaPruzeneUslugeService = ocjenaPruzeneUslugeService;
     }
 
     public static boolean istiDan(Instant instant1, Instant instant2) {
@@ -184,7 +188,7 @@ public class RezervacijaController {
     }
 
         @GetMapping("/klijent")
-    public ResponseEntity<List<RezervacijaKlijentDto>> getRezervacijeKlijenta(@RequestParam String clerkUserId) {
+        public ResponseEntity<List<RezervacijaKlijentDto>> getRezervacijeKlijenta(@RequestParam String clerkUserId) {
         Optional<Korisnik> korisnikOptional = korisnikService.findByClerkUserId(clerkUserId);
         int i = 1;
         if(korisnikOptional.isPresent()) {
@@ -209,7 +213,19 @@ public class RezervacijaController {
                 System.out.println(i++);
                 RezervacijaKlijentDto rezervacijaDto = new RezervacijaKlijentDto();
                 rezervacijaDto.setId(r.getId());
-                rezervacijaDto.setSalon(new SalonDto(r.getZaposleniSalonUsluga().getSalonUsluga().getSalon()));
+                SalonDto salonDto = new SalonDto(r.getZaposleniSalonUsluga().getSalonUsluga().getSalon());
+                List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salonDto.getId(), "G");
+                List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
+                List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salonDto.getId(), "N");
+                Optional<OcjenaPruženeUsluge> ocjena = ocjenaPruzeneUslugeService.getOcjenaPruženeUslugeByRezervacijaId(r.getId());
+                if(ocjena.isPresent()) {
+                    rezervacijaDto.setOcjena(new OcjenaPruzeneUslugeDto(ocjena.get()));
+                }
+                salonDto.setGalerijaSlika(galerija);
+                if(!naslovne.isEmpty()) {
+                    salonDto.setNaslovnaSlika(naslovne.get(0).getNaziv());
+                }
+                rezervacijaDto.setSalon(salonDto);
                 rezervacijaDto.setNazivUsluge(r.getZaposleniSalonUsluga().getSalonUsluga().getUsluga().getNaziv());
                 rezervacijaDto.setZaposleni(new ZaposleniDto(r.getZaposleniSalonUsluga().getZaposleni()));
                 rezervacijaDto.setStatusRezervacije(r.getStatus());
@@ -274,7 +290,7 @@ public class RezervacijaController {
                         System.out.println("Obrisana rezervacija jer nije plaćena: " + sacuvanaRezervacija.getId());
                     }
                 }
-            }, 2 * 60 * 1000);
+            }, 2 * 600 * 1000);
             return ResponseEntity.ok(new RezervacijaDto(sacuvanaRezervacija));
         } else {
             return ResponseEntity.notFound().build();

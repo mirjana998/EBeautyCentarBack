@@ -45,7 +45,7 @@ public class RadnoVrijemeService {
         return radnoVrijemeRepository.save(radnoVrijeme);
     }
 
-    public void deleteRadnoVrijeme(Long id) {
-        radnoVrijemeRepository.deleteById(id);
+    public List<RadnoVrijeme> findBySalonId(Long salonId) {
+        return radnoVrijemeRepository.findBySalonId(salonId);
     }
 }

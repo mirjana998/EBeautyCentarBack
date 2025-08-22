@@ -14,10 +14,11 @@ public class RezervacijaKlijentDto implements Serializable {
     private Instant vrijemePocetka;
     private String statusRezervacije;
     private String clerkUserId;
+    private OcjenaPruzeneUslugeDto ocjena;
 
     public RezervacijaKlijentDto() {}
 
-    public RezervacijaKlijentDto(long id, SalonDto salon, String nazivUsluge, ZaposleniDto zaposleni, Instant vrijemePocetka, String clerkUserId, String statusRezervacije) {
+    public RezervacijaKlijentDto(long id, SalonDto salon, String nazivUsluge, ZaposleniDto zaposleni, Instant vrijemePocetka, String clerkUserId, String statusRezervacije, OcjenaPruzeneUslugeDto ocjena) {
         this.id = id;
         this.salon = salon;
         this.nazivUsluge = nazivUsluge;
@@ -25,6 +26,7 @@ public class RezervacijaKlijentDto implements Serializable {
         this.vrijemePocetka = vrijemePocetka;
         this.statusRezervacije = statusRezervacije;
         this.clerkUserId = clerkUserId;
+        this.ocjena = ocjena;
     }
 
     public long getId() {
@@ -82,5 +84,13 @@ public class RezervacijaKlijentDto implements Serializable {
 
     public void setClerkUserId(String clerkUserId) {
         this.clerkUserId = clerkUserId;
+    }
+
+    public OcjenaPruzeneUslugeDto getOcjena() {
+        return ocjena;
+    }
+
+    public void setOcjena(OcjenaPruzeneUslugeDto ocjena) {
+        this.ocjena = ocjena;
     }
 }

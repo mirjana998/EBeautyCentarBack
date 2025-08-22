@@ -4,8 +4,10 @@ import com.example.ebeautycentar.dto.SalonUslugaDodajDto;
 import com.example.ebeautycentar.dto.SalonUslugaDto;
 import com.example.ebeautycentar.entity.RadnoVrijeme;
 import com.example.ebeautycentar.entity.SalonUsluga;
+import com.example.ebeautycentar.entity.Slika;
 import com.example.ebeautycentar.service.RadnoVrijemeService;
 import com.example.ebeautycentar.service.SalonUslugaService;
+import com.example.ebeautycentar.service.SlikaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,13 @@ public class SalonUslugaController {
 
     private final SalonUslugaService salonUslugaService;
     private final RadnoVrijemeService radnoVrijemeService;
+    private final SlikaService slikaService;
 
     @Autowired
-    public SalonUslugaController(SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService) {
+    public SalonUslugaController(SalonUslugaService salonUslugaService, RadnoVrijemeService radnoVrijemeService, SlikaService slikaService) {
         this.salonUslugaService = salonUslugaService;
         this.radnoVrijemeService = radnoVrijemeService;
+        this.slikaService = slikaService;
     }
 
     @GetMapping
@@ -55,12 +59,19 @@ public class SalonUslugaController {
 
     @GetMapping("/salon")
     public ResponseEntity<List<SalonUslugaDto>> getSalonUslugaBySalonId(@RequestParam Long id) {
-       List<SalonUslugaDto> salonUsluge = salonUslugaService.getSalonUslugaBySalonId(id);
-        if(salonUsluge.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }return ResponseEntity.ok(salonUsluge);
-    }
+        List<SalonUsluga> salonUsluge = salonUslugaService.getSalonUslugaBySalonId(id);
+        List<SalonUslugaDto> salonUslugaDtoList = new ArrayList<>();
+        for (SalonUsluga s : salonUsluge) {
+            SalonUslugaDto dto = new SalonUslugaDto(s);
+            Optional<Slika> slikaOptional = slikaService.getSlikaByUslugaId(dto.getUslugaId());
+            if (slikaOptional.isPresent()) {
+                dto.setSlika(slikaOptional.get().getNaziv());
+                salonUslugaDtoList.add(dto);
+            }
 
+        }
+        return ResponseEntity.ok(salonUslugaDtoList);
+    }
     @PostMapping("/dodaj")
     public ResponseEntity<SalonUslugaDto> dodajSalonUslugu(@RequestParam String nazivSalona,
                                                            @RequestParam String nazivUsluge,

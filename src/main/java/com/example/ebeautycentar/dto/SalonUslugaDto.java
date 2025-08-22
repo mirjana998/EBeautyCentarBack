@@ -10,20 +10,19 @@ import java.util.Objects;
 /**
  * DTO for {@link SalonUsluga}
  */
-public class SalonUslugaDto implements Serializable {
-    private final Long id;
-    private final Long salonId;
-    private final Long uslugaId;
-    private final LocalDate datumPocetka;
-    private final LocalTime trajanjeUsluge;
-    private final LocalDate datumKraja;
-    private final String status;
-    private final Double cijena;
-    private final String opis;
+public class SalonUslugaDto  implements Serializable {
+    private  Long id;
+    private Long salonId;
+    private  Long uslugaId;
+    private LocalDate datumPocetka;
+    private LocalTime trajanjeUsluge;
+    private LocalDate datumKraja;
+    private  String status;
+    private Double cijena;
+    private String opis;
+    private String slika;
 
-
-
-    public SalonUslugaDto(Long id, Long salonId, Long uslugaId, LocalDate datumPocetka, LocalTime trajanjeUsluge, LocalDate datumKraja, String status, Double cijena, String opis) {
+    public SalonUslugaDto(Long id, Long salonId, Long uslugaId, LocalDate datumPocetka, LocalTime trajanjeUsluge, LocalDate datumKraja, String status, Double cijena, String opis,String slika) {
         this.id = id;
         this.salonId = salonId;
         this.uslugaId = uslugaId;
@@ -33,6 +32,7 @@ public class SalonUslugaDto implements Serializable {
         this.status = status;
         this.cijena = cijena;
         this.opis = opis;
+        this.slika = slika;
     }
 
     public SalonUslugaDto(SalonUsluga salonUsluga) {
@@ -45,6 +45,7 @@ public class SalonUslugaDto implements Serializable {
         this.cijena = salonUsluga.getCijena();
         this.opis = salonUsluga.getOpis();
         this.trajanjeUsluge = salonUsluga.getTrajanjeUsluge();
+        this.slika = null;
     }
 
     public Long getId() {
@@ -81,6 +82,50 @@ public class SalonUslugaDto implements Serializable {
 
     public String getOpis() {
         return opis;
+    }
+
+    public void setSlika(String slika) {
+        this.slika = slika;
+    }
+
+    public String getSlika() {
+        return slika;
+    }
+
+    public void setOpis(String opis) {
+        this.opis = opis;
+    }
+
+    public void setCijena(Double cijena) {
+        this.cijena = cijena;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setDatumKraja(LocalDate datumKraja) {
+        this.datumKraja = datumKraja;
+    }
+
+    public void setTrajanjeUsluge(LocalTime trajanjeUsluge) {
+        this.trajanjeUsluge = trajanjeUsluge;
+    }
+
+    public void setDatumPocetka(LocalDate datumPocetka) {
+        this.datumPocetka = datumPocetka;
+    }
+
+    public void setUslugaId(Long uslugaId) {
+        this.uslugaId = uslugaId;
+    }
+
+    public void setSalonId(Long salonId) {
+        this.salonId = salonId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

@@ -40,6 +40,10 @@ public class SlikaService {
         return slikaRepository.findById(id);
     }
 
+    public Optional<Slika> getSlikaByUslugaId(Long uslugaId) {
+        return slikaRepository.findByUslugaId(uslugaId);
+    }
+
 
     public Slika saveSlika(Slika slika) {
         return slikaRepository.save(slika);

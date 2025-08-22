@@ -16,6 +16,7 @@ public interface NovostRepository extends JpaRepository<Novost, Long> {
     select n.* from novost n
    	join salon s on s.id = n.salon_id
        where n.salon_id = :salon_id and n.status = :status
+    order by n.vrijeme_kreiranja desc
     """, nativeQuery = true)
     List<Novost> findBySalonId(@Param("salon_id") Long salonId, @Param("status") String status);
 }
