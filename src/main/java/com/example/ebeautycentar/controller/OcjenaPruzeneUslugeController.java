@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +80,16 @@ public class OcjenaPruzeneUslugeController {
             }
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/zaposleni/{id}")
+    public ResponseEntity<List<OcjenaPruzeneUslugeDto>> dohvatiOcjeneZaposlenog(@PathVariable Long id) {
+        List<OcjenaPruženeUsluge> ocjene = ocjenaPruzeneUslugeService.ocjeneZaposlenog(id);
+        List<OcjenaPruzeneUslugeDto> ocjeneDtos = new ArrayList<>();
+        for(OcjenaPruženeUsluge o : ocjene) {
+            ocjeneDtos.add(new OcjenaPruzeneUslugeDto(o));
+        }
+        return ResponseEntity.ok(ocjeneDtos);
     }
 
 

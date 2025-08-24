@@ -50,6 +50,10 @@ public class SalonUslugaService {
         return  salonUslugaRepository.findBySalonId(id);
     }
 
+    public List<SalonUsluga> getSalonUslugaBySalonIdAndStatus(Long id) {
+        return  salonUslugaRepository.findBySalonIdAndStatus(id, "A");
+    }
+
 
     public SalonUsluga saveSalonUsluga(SalonUsluga salonUsluga) {
         return salonUslugaRepository.save(salonUsluga);
@@ -63,37 +67,32 @@ public class SalonUslugaService {
         return salonUslugaRepository.findByStatus("A");
     }
 
-    public SalonUslugaDto kreirajSalonUslugu(SalonUslugaDodajDto dto, MultipartFile slikaFile) throws IOException {
-        Salon salon = salonRepository.findByNaziv(dto.getNazivSalona())
-                .orElseThrow(() -> new RuntimeException("Salon nije pronađen"));
-
-        Usluga usluga = uslugaRepository.findByNaziv(dto.getNazivUsluge())
-                .orElseThrow(() -> new RuntimeException("Usluga nije pronađena"));
-
-        SalonUsluga nova = new SalonUsluga();
-        nova.setSalon(salon);
-        nova.setUsluga(usluga);
-        nova.setTrajanjeUsluge(dto.getTrajanje_usluge());
-        nova.setCijena(dto.getCijena());
-        nova.setOpis(dto.getOpis());
-        nova.setDatumPocetka(null);
-        nova.setDatumKraja(null);
-        nova.setStatus("A");
-        salonUslugaRepository.save(nova);
-
-        if (slikaFile != null && !slikaFile.isEmpty()) {
-            Slika slika = new Slika();
-            slika.setNaziv(usluga.getNaziv());
-            slika.setSalon(salon);
-            slika.setVrsta("G");
-            slika.setUsluga(usluga);
-            slika.setStatus("A");
-            slika.setSlika(slikaFile.getBytes());
-            slikaRepository.save(slika);
-        }
-
-        return new SalonUslugaDto(nova);
-    }
+//    public SalonUslugaDto kreirajSalonUslugu(SalonUslugaDodajDto dto /*, MultipartFile slikaFile*/) throws IOException {
+//
+//        SalonUsluga nova = new SalonUsluga();
+//
+//        nova.setSalon(dto.);
+//        nova.setUsluga(usluga);
+//        nova.setTrajanjeUsluge(dto.getTrajanje_usluge());
+//        nova.setCijena(dto.getCijena());
+//        nova.setOpis(dto.getOpis());
+//        nova.setDatumPocetka(null);
+//        nova.setDatumKraja(null);
+//        nova.setStatus("A");
+//        salonUslugaRepository.save(nova);
+//
+////        if (slikaFile != null && !slikaFile.isEmpty()) {
+////            Slika slika = new Slika();
+////            slika.setNaziv(usluga.getNaziv());
+////            slika.setSalon(salon);
+////            slika.setVrsta("G");
+////            slika.setUsluga(usluga);
+////            slika.setStatus("A");
+////            slika.setSlika(slikaFile.getBytes());
+////            slikaRepository.save(slika);
+////        }
+//        return new SalonUslugaDto(nova);
+//    }
 
 
 }

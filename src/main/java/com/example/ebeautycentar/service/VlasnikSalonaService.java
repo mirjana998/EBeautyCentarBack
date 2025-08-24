@@ -31,6 +31,10 @@ public class VlasnikSalonaService {
         return vlasnikSalonaDtoList;
     }
 
+    public Optional<VlasnikSalona> findById(Long id) {
+        return vlasnikSalonaRepository.findById(id);
+    }
+
 
     public Optional<VlasnikSalona> getVlasnikSalonaById(Long id) {
         return vlasnikSalonaRepository.findById(id);

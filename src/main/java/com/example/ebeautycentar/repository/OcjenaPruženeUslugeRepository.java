@@ -1,7 +1,6 @@
 package com.example.ebeautycentar.repository;
 
 import com.example.ebeautycentar.entity.OcjenaPru탑eneUsluge;
-import com.example.ebeautycentar.entity.Rezervacija;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,13 +12,24 @@ public interface OcjenaPru탑eneUslugeRepository extends JpaRepository<OcjenaPru�
 
     @Query(value = """
      select opu.*
-    from ocjena_pru탑ene_usluge opu
-    join rezervacija rez on opu.rezervacija_id = rez.id
-    join salon_usluga su on rez.salon_usluga_id = su.id
-    join salon s on su.salon_id = s.id
-    where s.id = :salon_id;
+        from ocjena_pru탑ene_usluge opu
+        join rezervacija rez on opu.rezervacija_id = rez.id
+        join zaposleni_salon_usluga zsu on zsu.id = rez.zaposleni_salon_usluga_id
+        join salon_usluga su on zsu.salon_usluga_id = su.id
+        join salon s on su.salon_id = s.id
+        where s.id = :salon_id;                     
     """, nativeQuery = true)
     List<OcjenaPru탑eneUsluge> findAllBySalonId(@Param("salon_id") Long salonId);
+
+    @Query(value = """
+     select opu.*
+        from ocjena_pru탑ene_usluge opu
+        join rezervacija rez on opu.rezervacija_id = rez.id
+        join zaposleni_salon_usluga zsu on zsu.id = rez.zaposleni_salon_usluga_id
+        join zaposleni z on zsu.zaposleni_id = z.id
+        where z.id = :zaposleni_id;                     
+    """, nativeQuery = true)
+    List<OcjenaPru탑eneUsluge> findAllByZaposleniId(@Param("zaposleni_id") Long zaposleniId);
 
     Optional<OcjenaPru탑eneUsluge> findByRezervacijaId(Long id);
 }

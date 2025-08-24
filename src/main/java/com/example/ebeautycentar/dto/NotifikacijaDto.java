@@ -1,6 +1,8 @@
 package com.example.ebeautycentar.dto;
 
 import com.example.ebeautycentar.entity.Notifikacija;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -15,6 +17,22 @@ public class NotifikacijaDto implements Serializable {
     private final Instant vrijemeKreiranja;
     private final String status;
     private final Long korisnikId;
+
+    @JsonCreator
+    public NotifikacijaDto(
+            @JsonProperty("id") Long id,
+            @JsonProperty("sadrzaj") String sadrzaj,
+            @JsonProperty("vrijemeKreiranja") Instant vrijemeKreiranja,
+            @JsonProperty("status") String status,
+            @JsonProperty("korisnikId") Long korisnikId
+    ) {
+        this.id = id;
+        this.sadrzaj =sadrzaj;
+        this.korisnikId = korisnikId;
+        this.status = status;
+        this.vrijemeKreiranja = vrijemeKreiranja;
+    }
+
 
     public NotifikacijaDto(Notifikacija notifikacija) {
         this.id = notifikacija.getId();

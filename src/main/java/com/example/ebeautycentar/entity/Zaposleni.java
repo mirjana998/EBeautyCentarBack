@@ -77,4 +77,15 @@ public class Zaposleni {
         this.vlasnikSalona = vlasnikSalona;
     }
 
+    @Override
+    public String toString() {
+        return "Zaposleni{" +
+                "id=" + id +
+                ", ime='" + ime + '\'' +
+                ", prezime='" + prezime + '\'' +
+                ", aktivan='" + aktivan + '\'' +
+                ", salon=" + salon +
+                ", vlasnikSalona=" + vlasnikSalona +
+                '}';
+    }
 }

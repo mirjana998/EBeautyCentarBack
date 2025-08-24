@@ -50,4 +50,16 @@ public class RadnoVrijemeController {
 
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<RadnoVrijemeDto> updateRadnoVrijeme(@RequestBody RadnoVrijemeDto dto) {
+        Optional<RadnoVrijeme> radnoVrijemeOptional = radnoVrijemeService.getRadnoVrijemeById(dto.getId());
+        if(radnoVrijemeOptional.isPresent()) {
+            radnoVrijemeOptional.get().setPocetakRadnoVrijeme(dto.getPocetakRadnoVrijeme());
+            radnoVrijemeOptional.get().setKrajRadnoVrijeme(dto.getKrajRadnoVrijeme());
+            RadnoVrijeme rv = radnoVrijemeService.saveRadnoVrijeme(radnoVrijemeOptional.get());
+            return ResponseEntity.ok(new RadnoVrijemeDto(rv));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }

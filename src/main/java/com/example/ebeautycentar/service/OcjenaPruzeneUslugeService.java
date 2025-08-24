@@ -54,6 +54,9 @@ public class OcjenaPruzeneUslugeService {
         return ocjenaPruženeUslugeRepository.save(ocjenaPruženeUsluge);
     }
 
+    public List<OcjenaPruženeUsluge> ocjeneZaposlenog(Long zaposleniId) {
+        return ocjenaPruženeUslugeRepository.findAllByZaposleniId(zaposleniId);
+    }
 
 
 }

@@ -41,4 +41,6 @@ public interface SalonRepository extends JpaRepository<Salon, Long> {
     List<Salon>findPopularni(@Param("status_r") String statusR, @Param("status_s") String statusS);
 
     Optional<Salon> findByNaziv(String naziv);
+
+    List<Salon> findByVlasnikSalonaId(Long vlasnikSalonaId);
 }

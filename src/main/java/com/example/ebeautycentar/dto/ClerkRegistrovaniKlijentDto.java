@@ -9,7 +9,7 @@ public class ClerkRegistrovaniKlijentDto implements Serializable {
     private String email;
     private String korisnickoIme;
     private String brojTelefona;
-    private String clerkUserId; // ✅ NOVO POLJE
+    private String clerkUserId;
 
     public ClerkRegistrovaniKlijentDto() {
     }

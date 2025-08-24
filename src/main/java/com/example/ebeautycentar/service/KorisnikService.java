@@ -30,12 +30,9 @@ public class KorisnikService {
         return korisnikDtoList;
     }
 
-
     public Optional<Korisnik> getKorisnikById(Long id) {
         return korisnikRepository.findById(id);
     }
-
-
 
     public Korisnik saveKorisnik(Korisnik korisnik) {
         return korisnikRepository.save(korisnik);
@@ -55,6 +52,10 @@ public class KorisnikService {
 
     public Optional<Korisnik> findByClerkUserId(String clerkUserId) {
         return korisnikRepository.findByClerkUserId(clerkUserId);
+    }
+
+    public Optional<Korisnik> findByKorisnickoIme(String korisnickoIme) {
+        return korisnikRepository.findByKorisnickoIme(korisnickoIme);
     }
 
 

@@ -9,5 +9,7 @@ public interface ZaposleniRepository extends JpaRepository<Zaposleni, Long> {
 
     List<Zaposleni> findByAktivan(String aktivan);
 
+    List<Zaposleni> findBySalonIdAndAktivan(long salonId, String aktivan);
+
     List<Zaposleni> findBySalonId(long salonId);
 }

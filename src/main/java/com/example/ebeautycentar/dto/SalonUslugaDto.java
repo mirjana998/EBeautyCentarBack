@@ -1,6 +1,8 @@
 package com.example.ebeautycentar.dto;
 
 import com.example.ebeautycentar.entity.SalonUsluga;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,7 +15,7 @@ import java.util.Objects;
 public class SalonUslugaDto  implements Serializable {
     private  Long id;
     private Long salonId;
-    private  Long uslugaId;
+    private  UslugaDto uslugaDto;
     private LocalDate datumPocetka;
     private LocalTime trajanjeUsluge;
     private LocalDate datumKraja;
@@ -22,10 +24,35 @@ public class SalonUslugaDto  implements Serializable {
     private String opis;
     private String slika;
 
+    @JsonCreator
+    public SalonUslugaDto(
+            @JsonProperty("id") Long id,
+            @JsonProperty("salonId") Long salonId,
+            @JsonProperty("uslugaDto") UslugaDto uslugaDto,
+            @JsonProperty("datumPocetka") LocalDate datumPocetka,
+            @JsonProperty("trajanjeUsluge") LocalTime trajanjeUsluge,
+            @JsonProperty("datumKraja") LocalDate datumKraja,
+            @JsonProperty("status") String status,
+            @JsonProperty("cijena") Double cijena,
+            @JsonProperty("opis") String opis,
+            @JsonProperty("slika") String slika
+    ) {
+        this.id = id;
+        this.salonId = salonId;
+        this.uslugaDto = uslugaDto;
+        this.datumPocetka = datumPocetka;
+        this.trajanjeUsluge = trajanjeUsluge;
+        this.datumKraja = datumKraja;
+        this.status = status;
+        this.cijena = cijena;
+        this.opis = opis;
+        this.slika = slika;
+    }
+
     public SalonUslugaDto(Long id, Long salonId, Long uslugaId, LocalDate datumPocetka, LocalTime trajanjeUsluge, LocalDate datumKraja, String status, Double cijena, String opis,String slika) {
         this.id = id;
         this.salonId = salonId;
-        this.uslugaId = uslugaId;
+        this.uslugaDto = null;
         this.datumPocetka = datumPocetka;
         this.trajanjeUsluge = trajanjeUsluge;
         this.datumKraja = datumKraja;
@@ -38,7 +65,7 @@ public class SalonUslugaDto  implements Serializable {
     public SalonUslugaDto(SalonUsluga salonUsluga) {
         this.id = salonUsluga.getId();
         this.salonId = salonUsluga.getSalon().getId();
-        this.uslugaId = salonUsluga.getUsluga().getId();
+        this.uslugaDto = new UslugaDto(salonUsluga.getUsluga());
         this.datumKraja = salonUsluga.getDatumKraja();
         this.datumPocetka = salonUsluga.getDatumPocetka();
         this.status = salonUsluga.getStatus();
@@ -56,8 +83,8 @@ public class SalonUslugaDto  implements Serializable {
         return salonId;
     }
 
-    public Long getUslugaId() {
-        return uslugaId;
+    public UslugaDto getUslugaDto() {
+        return uslugaDto;
     }
 
     public LocalDate getDatumPocetka() {
@@ -116,8 +143,8 @@ public class SalonUslugaDto  implements Serializable {
         this.datumPocetka = datumPocetka;
     }
 
-    public void setUslugaId(Long uslugaId) {
-        this.uslugaId = uslugaId;
+    public void setUslugaDto(UslugaDto uslugaDto) {
+        this.uslugaDto = uslugaDto;
     }
 
     public void setSalonId(Long salonId) {
@@ -129,37 +156,19 @@ public class SalonUslugaDto  implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SalonUslugaDto entity = (SalonUslugaDto) o;
-        return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.salonId, entity.salonId) &&
-                Objects.equals(this.uslugaId, entity.uslugaId) &&
-                Objects.equals(this.datumPocetka, entity.datumPocetka) &&
-                Objects.equals(this.trajanjeUsluge, entity.trajanjeUsluge) &&
-                Objects.equals(this.datumKraja, entity.datumKraja) &&
-                Objects.equals(this.status, entity.status) &&
-                Objects.equals(this.cijena, entity.cijena) &&
-                Objects.equals(this.opis, entity.opis);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, salonId, uslugaId, datumPocetka, trajanjeUsluge, datumKraja, status, cijena, opis);
-    }
-
-    @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "salonId = " + salonId + ", " +
-                "uslugaId = " + uslugaId + ", " +
-                "datumPocetka = " + datumPocetka + ", " +
-                "trajanjeUsluge = " + trajanjeUsluge + ", " +
-                "datumKraja = " + datumKraja + ", " +
-                "status = " + status + ", " +
-                "cijena = " + cijena + ", " +
-                "opis = " + opis + ")";
+        return "SalonUslugaDto{" +
+                "id=" + id +
+                ", salonId=" + salonId +
+                ", uslugaDto=" + uslugaDto +
+                ", datumPocetka=" + datumPocetka +
+                ", trajanjeUsluge=" + trajanjeUsluge +
+                ", datumKraja=" + datumKraja +
+                ", status='" + status + '\'' +
+                ", cijena=" + cijena +
+                ", opis='" + opis + '\'' +
+                ", slika='" + slika + '\'' +
+                '}';
     }
+
 }
