@@ -37,10 +37,4 @@ public class DanUSedmiciController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteDanUSedmici(@PathVariable int id) {
-        danUSedmiciService.deleteDanUSedmici(id);
-        return ResponseEntity.ok("OBRISAN!");
-    }
 }
