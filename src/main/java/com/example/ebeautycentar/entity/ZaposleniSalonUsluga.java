@@ -46,4 +46,12 @@ public class ZaposleniSalonUsluga {
         this.salonUsluga = salonUsluga;
     }
 
+    @Override
+    public String toString() {
+        return "ZaposleniSalonUsluga{" +
+                "id=" + id +
+                ", zaposleni=" + zaposleni +
+                ", salonUsluga=" + salonUsluga +
+                '}';
+    }
 }

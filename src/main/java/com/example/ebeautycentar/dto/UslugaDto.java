@@ -1,6 +1,8 @@
 package com.example.ebeautycentar.dto;
 
 import com.example.ebeautycentar.entity.Usluga;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,6 +14,15 @@ public class UslugaDto implements Serializable {
     private final Long id;
     private final String naziv;
     private final String status;
+
+    @JsonCreator
+    public UslugaDto(@JsonProperty("id") Long id,
+                     @JsonProperty("naziv") String naziv,
+                     @JsonProperty("status") String status) {
+        this.id = id;
+        this.naziv = naziv;
+        this.status = status;
+    }
 
     public UslugaDto(Usluga usluga) {
         this.id = usluga.getId();

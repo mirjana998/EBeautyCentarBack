@@ -1,6 +1,7 @@
 package com.example.ebeautycentar.dto;
 
 import com.example.ebeautycentar.entity.OcjenaPruženeUsluge;
+import com.example.ebeautycentar.entity.Rezervacija;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,25 +11,27 @@ import java.util.Objects;
  */
 public class OcjenaPruzeneUslugeDto implements Serializable {
     private final Long id;
-    private final Long registrovaniKlijentId;
+    private final RegistrovaniKlijentDto registrovaniKlijent;
     private final Integer ocjena;
     private final String komentar;
-    private final Long rezervacijaId;
+    private final RezervacijaDto rezervacija;
+    private String salonUsluga;
 
     public OcjenaPruzeneUslugeDto(OcjenaPruženeUsluge ocjena) {
         this.id = ocjena.getId();
-        this.registrovaniKlijentId = ocjena.getRegistrovaniKlijent().getId();
+        this.registrovaniKlijent = new RegistrovaniKlijentDto(ocjena.getRegistrovaniKlijent());
         this.ocjena = ocjena.getOcjena();
         this.komentar = ocjena.getKomentar();
-        this.rezervacijaId = ocjena.getRezervacija().getId();
+        this.rezervacija = new RezervacijaDto(ocjena.getRezervacija());
+        this.salonUsluga = ocjena.getRezervacija().getZaposleniSalonUsluga().getSalonUsluga().getUsluga().getNaziv();
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getRegistrovaniKlijentId() {
-        return registrovaniKlijentId;
+    public RegistrovaniKlijentDto getRegistrovaniKlijent() {
+        return registrovaniKlijent;
     }
 
     public Integer getOcjena() {
@@ -39,34 +42,12 @@ public class OcjenaPruzeneUslugeDto implements Serializable {
         return komentar;
     }
 
-    public Long getRezervacijaId() {
-        return rezervacijaId;
+    public RezervacijaDto getRezervacija() {
+        return rezervacija;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OcjenaPruzeneUslugeDto entity = (OcjenaPruzeneUslugeDto) o;
-        return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.registrovaniKlijentId, entity.registrovaniKlijentId) &&
-                Objects.equals(this.ocjena, entity.ocjena) &&
-                Objects.equals(this.komentar, entity.komentar) &&
-                Objects.equals(this.rezervacijaId, entity.rezervacijaId);
+    public String getSalonUsluga() {
+        return salonUsluga;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, registrovaniKlijentId, ocjena, komentar, rezervacijaId);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "registrovaniKlijentId = " + registrovaniKlijentId + ", " +
-                "ocjena = " + ocjena + ", " +
-                "komentar = " + komentar + ", " +
-                "rezervacijaId = " + rezervacijaId + ")";
-    }
 }

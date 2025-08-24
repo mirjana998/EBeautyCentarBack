@@ -127,4 +127,8 @@ public class SalonService {
         return salonRepository.findByNaziv(naziv)
                 .orElseThrow(() -> new RuntimeException("Salon nije pronađen"));
     }
+
+    public List<Salon> findByVlasnikSalonaId(Long vlasniSalonaId) {
+        return salonRepository.findByVlasnikSalonaId(vlasniSalonaId);
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -110,4 +111,23 @@ public class SalonController {
         }
         return ResponseEntity.ok(rezervacije);
     }
+
+    @GetMapping("/vlasnik")
+    public ResponseEntity<List<SalonDto>> getSaloniVlasnika(@RequestParam("id") Long id) {
+        List<Salon> lista = salonService.findByVlasnikSalonaId(id);
+        List<SalonDto> listaDto = new ArrayList<>();
+        for (Salon salon : lista) {
+            SalonDto salonDto = new SalonDto(salon);
+            List<Slika> galerijaSlika = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.getId(), "G");
+            List<String> galerija = galerijaSlika.stream().map(Slika::getNaziv).toList();
+            List<Slika> naslovne = this.slikaService.getBySalonIdAndStatusAndVrsta(salon.getId(), "N");
+            salonDto.setGalerijaSlika(galerija);
+            if(!naslovne.isEmpty()) {
+                salonDto.setNaslovnaSlika(naslovne.get(0).getNaziv());
+            }
+            listaDto.add(salonDto);
+        }
+        return ResponseEntity.ok(listaDto);
+    }
+
 }

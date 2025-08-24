@@ -30,12 +30,9 @@ public class NotifikacijaService {
         }
         return notifikacijaDtoList;
     }
-
-
     public Optional<Notifikacija> getNotifikacijaById(Long id) {
         return notifikacijaRepository.findById(id);
     }
-
 
     public Notifikacija saveNotifikacija(Notifikacija notifikacija) {
         return notifikacijaRepository.save(notifikacija);
@@ -45,7 +42,7 @@ public class NotifikacijaService {
         notifikacijaRepository.deleteById(id);
     }
 
-    public List<Notifikacija> findByStatusAktivan(String status) {
-        return notifikacijaRepository.findByStatus("A");
+    public List<Notifikacija> getNotifikacijeKorisnika(Long korisnikId) {
+       return notifikacijaRepository.findByKorisnikIdOrderByVrijemeKreiranjaDesc(korisnikId);
     }
 }

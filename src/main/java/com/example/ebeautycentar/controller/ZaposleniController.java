@@ -1,17 +1,15 @@
 package com.example.ebeautycentar.controller;
 
 
+import com.example.ebeautycentar.dto.SalonUslugaDto;
 import com.example.ebeautycentar.dto.ZaposleniDto;
-import com.example.ebeautycentar.entity.Salon;
-import com.example.ebeautycentar.entity.VlasnikSalona;
-import com.example.ebeautycentar.entity.Zaposleni;
-import com.example.ebeautycentar.service.SalonService;
-import com.example.ebeautycentar.service.VlasnikSalonaService;
-import com.example.ebeautycentar.service.ZaposleniService;
+import com.example.ebeautycentar.entity.*;
+import com.example.ebeautycentar.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +21,16 @@ public class ZaposleniController {
     private final ZaposleniService zaposleniService;
     private final VlasnikSalonaService vlasnikSalonaService;
     private final SalonService salonService;
+    private final ZaposleniSalonUslugaService zaposleniSalonUslugaService;
+    private final SalonUslugaService salonUslugaService;
 
     @Autowired
-    public ZaposleniController(ZaposleniService zaposleniService, VlasnikSalonaService vlasnikSalonaService, SalonService salonService) {
+    public ZaposleniController(ZaposleniService zaposleniService, VlasnikSalonaService vlasnikSalonaService, SalonService salonService, ZaposleniSalonUslugaService zaposleniSalonUslugaService, SalonUslugaService salonUslugaService) {
         this.zaposleniService = zaposleniService;
         this.vlasnikSalonaService = vlasnikSalonaService;
         this.salonService = salonService;
+        this.zaposleniSalonUslugaService = zaposleniSalonUslugaService;
+        this.salonUslugaService = salonUslugaService;
     }
 
     @GetMapping
@@ -49,9 +51,10 @@ public class ZaposleniController {
 
     @GetMapping("/salon")
     public ResponseEntity<List<ZaposleniDto>> getAllZaposleniBySalon(@RequestParam Long id) {
-        List<ZaposleniDto> zaposleniDtoList = zaposleniService.findBySalon(id);
-        if(zaposleniDtoList.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        List<Zaposleni> zaposleniList = zaposleniService.findBySalon(id);
+        List<ZaposleniDto> zaposleniDtoList = new ArrayList<>();
+        for(Zaposleni zaposleni : zaposleniList) {
+            zaposleniDtoList.add(new ZaposleniDto(zaposleni));
         }
         return ResponseEntity.ok(zaposleniDtoList);
     }
@@ -63,17 +66,33 @@ public class ZaposleniController {
         zaposleni.setPrezime(zaposleniDto.getPrezime());
         zaposleni.setAktivan("A");
 
-        Optional<VlasnikSalona> vlasnikSalonaOptional = vlasnikSalonaService.getVlasnikSalonaById(zaposleniDto.getVlasnikSalonaId());
         Optional<Salon> salonOptional = salonService.getSalonById(zaposleniDto.getSalonId());
-        if(vlasnikSalonaOptional.isPresent() && salonOptional.isPresent()) {
-            zaposleni.setVlasnikSalona(vlasnikSalonaOptional.get());
-            zaposleni.setSalon(salonOptional.get());
+        if(salonOptional.isPresent()) {
+                zaposleni.setVlasnikSalona(salonOptional.get().getVlasnikSalona());
+                zaposleni.setSalon(salonOptional.get());
 
-            Zaposleni noviZaposleni = zaposleniService.saveZaposleni(zaposleni);
-            return ResponseEntity.ok(new ZaposleniDto(noviZaposleni));
+                Zaposleni noviZaposleni = zaposleniService.saveZaposleni(zaposleni);
+                List<SalonUsluga> salonUslugaList = salonUslugaService.getSalonUslugaBySalonId(salonOptional.get().getId());
+                for (SalonUsluga su : salonUslugaList) {
+                    ZaposleniSalonUsluga zsu = new ZaposleniSalonUsluga();
+                    zsu.setSalonUsluga(su);
+                    zsu.setZaposleni(noviZaposleni);
+                    zaposleniSalonUslugaService.saveZaposleniSalonUsluga(zsu);
+                }
+                return ResponseEntity.ok(new ZaposleniDto(noviZaposleni));
+            }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/status/{id}")
+    public ResponseEntity<ZaposleniDto> promijeniStatus(@PathVariable Long id) {
+        Optional<Zaposleni> zaposleniOptional = zaposleniService.getZaposleniById(id);
+        if(zaposleniOptional.isPresent()) {
+            Zaposleni stari = zaposleniOptional.get();
+            stari.setAktivan(stari.getAktivan().equals("A")?"N":"A");
+            Zaposleni sacuvan = zaposleniService.saveZaposleni(stari);
+            return ResponseEntity.ok(new ZaposleniDto(sacuvan));
         }
-        else
-            return ResponseEntity.notFound().build();
-
+        return ResponseEntity.notFound().build();
     }
 }

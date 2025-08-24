@@ -1,21 +1,41 @@
 package com.example.ebeautycentar.dto;
 
+import java.time.Instant;
+
 public class RezervacijaSalonDto {
+    private Long id;
     private String imeKlijenta;
     private String prezimeKlijenta;
     private String nazivUsluge;
     private Double cijena;
-    private boolean placeno;
+    private String status;
+    private String valuta;
+    private Instant terminPocetkUsluge;
+    private Instant terminZavrsetkaUsluge;
+    private Long korisnikId;
 
     public RezervacijaSalonDto() {
     }
 
-    public RezervacijaSalonDto(String imeKlijenta, String prezimeKlijenta, String nazivUsluge, Double cijena, boolean placeno) {
+    public RezervacijaSalonDto(Long id, String imeKlijenta, String prezimeKlijenta, String nazivUsluge, Double cijena, String valuta, String status, Instant terminPocetkUsluge, Instant terminZavrsetkaUsluge, Long korisnikId) {
         this.imeKlijenta = imeKlijenta;
         this.prezimeKlijenta = prezimeKlijenta;
         this.nazivUsluge = nazivUsluge;
         this.cijena = cijena;
-        this.placeno=placeno;
+        this.id = id;
+        this.valuta = valuta;
+        this.status = status;
+        this.terminPocetkUsluge = terminPocetkUsluge;
+        this.terminZavrsetkaUsluge = terminZavrsetkaUsluge;
+        this.korisnikId = korisnikId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getImeKlijenta() {
@@ -50,11 +70,43 @@ public class RezervacijaSalonDto {
         this.cijena = cijena;
     }
 
-    public boolean isPlaceno() {
-        return placeno;
+    public String getStatus() {
+        return status;
     }
 
-    public void setPlaceno(boolean placeno) {
-        this.placeno = placeno;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getValuta() {
+        return valuta;
+    }
+
+    public void setValuta(String valuta) {
+        this.valuta = valuta;
+    }
+
+    public Instant getTerminPocetkUsluge() {
+        return terminPocetkUsluge;
+    }
+
+    public void setTerminPocetkUsluge(Instant terminPocetkUsluge) {
+        this.terminPocetkUsluge = terminPocetkUsluge;
+    }
+
+    public Instant getTerminZavrsetkaUsluge() {
+        return terminZavrsetkaUsluge;
+    }
+
+    public void setTerminZavrsetkaUsluge(Instant terminZavrsetkaUsluge) {
+        this.terminZavrsetkaUsluge = terminZavrsetkaUsluge;
+    }
+
+    public Long getKorisnikId() {
+        return korisnikId;
+    }
+
+    public void setKorisnikId(Long korisnikId) {
+        this.korisnikId = korisnikId;
     }
 }

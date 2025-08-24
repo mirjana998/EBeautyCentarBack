@@ -114,4 +114,18 @@ public class SalonUsluga {
         this.opis = opis;
     }
 
+    @Override
+    public String toString() {
+        return "SalonUsluga{" +
+                "id=" + id +
+                ", salon=" + salon +
+                ", usluga=" + usluga +
+                ", datumPocetka=" + datumPocetka +
+                ", trajanjeUsluge=" + trajanjeUsluge +
+                ", datumKraja=" + datumKraja +
+                ", status='" + status + '\'' +
+                ", cijena=" + cijena +
+                ", opis='" + opis + '\'' +
+                '}';
+    }
 }

@@ -15,6 +15,13 @@ public interface SalonUslugaRepository extends JpaRepository<SalonUsluga, Long> 
     @Query(value = """
      select * from salon_usluga s
      where s.salon_id= :id
+     and s.status =:status
+    """, nativeQuery = true)
+    List<SalonUsluga> findBySalonIdAndStatus(@Param("id") Long salonId, @Param("status") String status);
+
+    @Query(value = """
+     select * from salon_usluga s
+     where s.salon_id= :id
     """, nativeQuery = true)
     List<SalonUsluga> findBySalonId(@Param("id") Long salonId);
 

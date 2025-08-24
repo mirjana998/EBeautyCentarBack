@@ -6,32 +6,32 @@ import java.time.LocalTime;
 
 public class SalonUslugaDodajDto implements Serializable {
 
-    private String nazivSalona;
-    private String nazivUsluge;
-    private LocalTime trajanje_usluge;
+    private Long salonId;
+    private Long uslugaId;
+    private String trajanjeUsluge;
     private Double cijena;
     private String opis;
 
     public SalonUslugaDodajDto(){}
-    public SalonUslugaDodajDto(String nazivSalona, String nazivUsluge, LocalTime trajanje_usluge, Double cijena, String opis) {
-        this.nazivSalona = nazivSalona;
-        this.nazivUsluge = nazivUsluge;
-        this.trajanje_usluge = trajanje_usluge;
+
+    public SalonUslugaDodajDto(Long salonId, Long uslugaId, String trajanjeUsluge, Double cijena, String opis) {
+        this.salonId = salonId;
+        this.uslugaId = uslugaId;
+        this.trajanjeUsluge = trajanjeUsluge;
         this.cijena = cijena;
         this.opis = opis;
     }
 
-
-    public String getNazivSalona() {
-        return nazivSalona;
+    public Long getSalonaId() {
+        return salonId;
     }
 
-    public String getNazivUsluge() {
-        return nazivUsluge;
+    public Long getUslugaId() {
+        return uslugaId;
     }
 
-    public LocalTime getTrajanje_usluge() {
-        return trajanje_usluge;
+    public String getTrajanjeUsluge() {
+        return trajanjeUsluge;
     }
 
     public Double getCijena() {
@@ -42,16 +42,16 @@ public class SalonUslugaDodajDto implements Serializable {
         return opis;
     }
 
-    public void setNazivSalona(String nazivSalona) {
-        this.nazivSalona = nazivSalona;
+    public void setSalonId(Long salonId) {
+        this.salonId = salonId;
     }
 
-    public void setNazivUsluge(String nazivUsluge) {
-        this.nazivUsluge = nazivUsluge;
+    public void setUslugaId(Long uslugaId) {
+        this.uslugaId = uslugaId;
     }
 
-    public void setTrajanje_usluge(LocalTime trajanje_usluge) {
-        this.trajanje_usluge = trajanje_usluge;
+    public void setTrajanjeUsluge(String trajanjeUsluge) {
+        this.trajanjeUsluge = trajanjeUsluge;
     }
 
     public void setCijena(Double cijena) {
