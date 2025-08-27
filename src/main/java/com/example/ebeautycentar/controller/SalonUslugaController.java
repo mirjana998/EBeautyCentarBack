@@ -59,8 +59,13 @@ public class SalonUslugaController {
     }
 
     @GetMapping("/salon")
-    public ResponseEntity<List<SalonUslugaDto>> getSalonUslugaBySalonId(@RequestParam Long id) {
+    public ResponseEntity<List<SalonUslugaDto>> getSalonUslugaBySalonId(@RequestParam Long id, @RequestParam String uloga) {
         List<SalonUsluga> salonUsluge = salonUslugaService.getSalonUslugaBySalonId(id);
+        List<SalonUsluga> salonUslugaFilter;
+        if("K".equals(uloga)) {
+            salonUslugaFilter = salonUsluge.stream().filter(s->s.getStatus().equals("A")).toList();
+            salonUsluge = salonUslugaFilter;
+        }
         List<SalonUslugaDto> salonUslugaDtoList = new ArrayList<>();
         for (SalonUsluga s : salonUsluge) {
             SalonUslugaDto dto = new SalonUslugaDto(s);
