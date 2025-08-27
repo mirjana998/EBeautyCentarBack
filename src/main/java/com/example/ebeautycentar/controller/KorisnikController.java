@@ -38,11 +38,5 @@ public class KorisnikController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteKorisnik(@PathVariable Long id) {
-        korisnikService.deleteKorisnik(id);
-        return ResponseEntity.ok("OBRISAN!");
-    }
-
 }
 
