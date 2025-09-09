@@ -44,6 +44,7 @@ public class TransakcijaController {
         transakcija.setDatumTransakcije(transakcijaDto.getDatumTransakcije());
         transakcija.setStatus("I");
         transakcija.setRezervacija(rezervacija);
+        transakcija.setSessionId(transakcijaDto.getSesijaId());
 
         TransakcijaDto savedTransakcija = transakcijaService.dodajTransakciju(transakcija);
 
@@ -51,6 +52,17 @@ public class TransakcijaController {
         rezervacijaService.saveRezervacija(rezervacija);
 
         return ResponseEntity.ok(savedTransakcija);
+    }
+    @GetMapping("/by-rezervacija/{rezervacijaId}")
+    public ResponseEntity<TransakcijaDto> getTransakcijaByRezervacijaId(@PathVariable Long rezervacijaId) {
+        Optional<Transakcija> transakcijaOptional = transakcijaService.getTransakcijaByRezervacijaId(rezervacijaId);
+
+        if (transakcijaOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        TransakcijaDto dto = new TransakcijaDto(transakcijaOptional.get());
+        return ResponseEntity.ok(dto);
     }
 
 

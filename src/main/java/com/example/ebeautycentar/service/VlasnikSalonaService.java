@@ -48,4 +48,6 @@ public class VlasnikSalonaService {
     public void deleteVlasnikSalona(Long id) {
         vlasnikSalonaRepository.deleteById(id);
     }
+
+
 }

@@ -24,4 +24,5 @@ public interface TransakcijaRepository extends JpaRepository<Transakcija, Long> 
   List<Transakcija> findAllBySalonId(@Param("salon_id") Long salonId, @Param("status") String status);
   Optional<Transakcija> findByRezervacijaId(Long rezervacijaId);
 
+
 }

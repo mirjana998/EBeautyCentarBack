@@ -5,7 +5,7 @@ import java.time.Instant;
 
 public class TransakcijaStripeDto {
 
-    private Long sesijaId;
+    private String sesijaId;
     private Long rezervacijaId;
     private BigDecimal ukupanIznos;
     private String valuta;
@@ -13,7 +13,7 @@ public class TransakcijaStripeDto {
     private String emailKlijenta;
     private Instant datumTransakcije;
 
-    public TransakcijaStripeDto(Long sesijaId, Long rezervacijaId, BigDecimal ukupanIznos, String valuta, String status, String emailKlijenta, Instant datumTransakcije) {
+    public TransakcijaStripeDto(String sesijaId, Long rezervacijaId, BigDecimal ukupanIznos, String valuta, String status, String emailKlijenta, Instant datumTransakcije) {
         this.sesijaId = sesijaId;
         this.rezervacijaId = rezervacijaId;
         this.ukupanIznos = ukupanIznos;
@@ -23,11 +23,11 @@ public class TransakcijaStripeDto {
         this.datumTransakcije = datumTransakcije;
     }
 
-    public Long getSesijaId() {
+    public String getSesijaId() {
         return sesijaId;
     }
 
-    public void setSesijaId(Long sesijaId) {
+    public void setSesijaId(String sesijaId) {
         this.sesijaId = sesijaId;
     }
 

@@ -25,6 +25,17 @@ public class Transakcija {
     @Column(name = "datum_transakcije", nullable = false)
     private Instant datumTransakcije;
 
+    @Column(name = "session_id", nullable = true)
+    private String sessionId;
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "rezervacija_id", nullable = false)
     private Rezervacija rezervacija;
