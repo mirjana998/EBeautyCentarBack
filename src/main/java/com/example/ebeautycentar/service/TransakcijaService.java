@@ -6,6 +6,8 @@ import com.example.ebeautycentar.repository.TransakcijaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TransakcijaService {
 
@@ -21,4 +23,8 @@ public class TransakcijaService {
         Transakcija t = this.transakcijaRepository.save(transakcija);
         return new TransakcijaDto(t);
     }
+    public Optional<Transakcija> getTransakcijaByRezervacijaId(Long rezervacijaId) {
+        return transakcijaRepository.findByRezervacijaId(rezervacijaId);
+    }
+
 }

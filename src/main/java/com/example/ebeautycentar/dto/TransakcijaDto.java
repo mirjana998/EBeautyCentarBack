@@ -17,14 +17,16 @@ public class TransakcijaDto implements Serializable {
     private final BigDecimal iznos;
     private final Instant datumTransakcije;
     private final Long rezervacijaId;
+    private final String sessionId;
 
-    public TransakcijaDto(Long id, String valuta, String status, BigDecimal iznos, Instant datumTransakcije, Long rezervacijaId) {
+    public TransakcijaDto(Long id, String valuta, String sessionId,String status, BigDecimal iznos, Instant datumTransakcije, Long rezervacijaId) {
         this.id = id;
         this.valuta = valuta;
         this.status = status;
         this.iznos = iznos;
         this.datumTransakcije = datumTransakcije;
         this.rezervacijaId = rezervacijaId;
+        this.sessionId = sessionId;
     }
 
     public TransakcijaDto(Transakcija transakcija) {
@@ -34,6 +36,7 @@ public class TransakcijaDto implements Serializable {
         this.iznos = transakcija.getIznos();
         this.datumTransakcije = transakcija.getDatumTransakcije();
         this.rezervacijaId = transakcija.getRezervacija().getId();
+        this.sessionId = transakcija.getSessionId();
     }
 
     public Long getId() {
@@ -54,6 +57,10 @@ public class TransakcijaDto implements Serializable {
 
     public Instant getDatumTransakcije() {
         return datumTransakcije;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 
     public Long getRezervacijaId() {
