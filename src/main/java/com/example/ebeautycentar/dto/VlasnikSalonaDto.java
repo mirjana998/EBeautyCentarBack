@@ -11,10 +11,12 @@ import java.util.Objects;
 public class VlasnikSalonaDto implements Serializable {
     private final Long id;
     private final KorisnikDto korisnik;
+    private final String subscriptionId;
 
     public VlasnikSalonaDto(VlasnikSalona vlasnikSalona) {
         this.id = vlasnikSalona.getId();
         this.korisnik = new KorisnikDto(vlasnikSalona.getKorisnik());
+        this.subscriptionId=vlasnikSalona.getSubscriptionId();
     }
 
     public Long getId() {
@@ -37,6 +39,10 @@ public class VlasnikSalonaDto implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, korisnik);
+    }
+
+    public String getSubscriptionId() {
+        return subscriptionId;
     }
 
     @Override

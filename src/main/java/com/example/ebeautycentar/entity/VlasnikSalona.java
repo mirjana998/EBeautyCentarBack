@@ -15,6 +15,17 @@ public class VlasnikSalona {
     @JoinColumn(name = "korisnik_id", nullable = false)
     private Korisnik korisnik;
 
+    @Column(name = "subscription_id", nullable = true)
+    private String subscriptionId;
+
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
+
     public Long getId() {
         return id;
     }

@@ -4,6 +4,7 @@ package com.example.ebeautycentar.service;
 import com.example.ebeautycentar.dto.VlasnikSalonaDto;
 import com.example.ebeautycentar.entity.VlasnikSalona;
 import com.example.ebeautycentar.repository.VlasnikSalonaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class VlasnikSalonaService {
     public List<VlasnikSalonaDto> getAllKorisnik() {
         List<VlasnikSalona> vlasnikSalonaList = vlasnikSalonaRepository.findAll();
         List<VlasnikSalonaDto> vlasnikSalonaDtoList = new ArrayList<>();
-        for(VlasnikSalona vlasnikSalona : vlasnikSalonaList) {
+        for (VlasnikSalona vlasnikSalona : vlasnikSalonaList) {
             vlasnikSalonaDtoList.add(new VlasnikSalonaDto(vlasnikSalona));
         }
         return vlasnikSalonaDtoList;
@@ -47,6 +48,17 @@ public class VlasnikSalonaService {
 
     public void deleteVlasnikSalona(Long id) {
         vlasnikSalonaRepository.deleteById(id);
+    }
+
+    public boolean updateSubscriptionId(Long id, String subscriptionId) {
+        Optional<VlasnikSalona> vlasnikOptional = vlasnikSalonaRepository.findById(id);
+        if (vlasnikOptional.isPresent()) {
+            VlasnikSalona vlasnik = vlasnikOptional.get();
+            vlasnik.setSubscriptionId(subscriptionId);
+            vlasnikSalonaRepository.save(vlasnik);
+            return true;
+        }
+        return false;
     }
 
 
