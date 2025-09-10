@@ -41,7 +41,33 @@ public class VlasnikSalonaController {
         return ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/{vlasnikId}/subscription")
+    public ResponseEntity<String> updateSubscription(
+            @PathVariable Long vlasnikId,
+            @RequestBody Map<String, String> body) {
 
+        String subscriptionId = body.get("subscriptionId");
+        boolean updated = vlasnikSalonaService.updateSubscriptionId(vlasnikId, subscriptionId);
 
+        if (updated) {
+            return ResponseEntity.ok("Subscription ID updated successfully");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{vlasnikId}")
+    public ResponseEntity<Map<String, String>> getVlasnik(@PathVariable Long vlasnikId) {
+        Optional<VlasnikSalona> optionalVlasnik = vlasnikSalonaService.findById(vlasnikId);
+        if (optionalVlasnik.isPresent()) {
+            VlasnikSalona vlasnik = optionalVlasnik.get();
+            return ResponseEntity.ok(Map.of(
+                    "id", vlasnik.getId().toString(),
+                    "subscriptionId", vlasnik.getSubscriptionId() == null ? "" : vlasnik.getSubscriptionId()
+            ));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
