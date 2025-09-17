@@ -1,10 +1,12 @@
 package com.example.ebeautycentar.service;
 
 
+import com.example.ebeautycentar.dto.KorisnikDto;
 import com.example.ebeautycentar.dto.VlasnikSalonaDto;
+import com.example.ebeautycentar.entity.Korisnik;
 import com.example.ebeautycentar.entity.VlasnikSalona;
+import com.example.ebeautycentar.repository.KorisnikRepository;
 import com.example.ebeautycentar.repository.VlasnikSalonaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,13 @@ public class VlasnikSalonaService {
 
     @Autowired
     private final VlasnikSalonaRepository vlasnikSalonaRepository;
+    @Autowired
+    private final KorisnikRepository korisnikRepository;
 
     @Autowired
-    public VlasnikSalonaService(VlasnikSalonaRepository vlasnikSalonaRepository) {
+    public VlasnikSalonaService(VlasnikSalonaRepository vlasnikSalonaRepository,KorisnikRepository korisnikRepository) {
         this.vlasnikSalonaRepository = vlasnikSalonaRepository;
+        this.korisnikRepository = korisnikRepository;
     }
 
     public List<VlasnikSalonaDto> getAllKorisnik() {
@@ -61,5 +66,24 @@ public class VlasnikSalonaService {
         return false;
     }
 
+    public VlasnikSalonaDto kreirajVlasnika(KorisnikDto korisnikDto) {
 
+        Korisnik korisnik = new Korisnik();
+        korisnik.setIme(korisnikDto.getIme());
+        korisnik.setPrezime(korisnikDto.getPrezime());
+        korisnik.setBrojTelefona(korisnikDto.getBrojTelefona());
+        korisnik.setEmail(korisnikDto.getEmail());
+        korisnik.setKorisnickoIme(korisnikDto.getKorisnickoIme());
+        korisnik.setLozinka(korisnikDto.getLozinka());
+        korisnik.setStatus("A");
+        korisnik.setClerkUserId(null);
+        korisnik = korisnikRepository.save(korisnik);
+
+        VlasnikSalona vlasnik = new VlasnikSalona();
+        vlasnik.setKorisnik(korisnik);
+        vlasnik.setSubscriptionId(null);
+        vlasnik = vlasnikSalonaRepository.save(vlasnik);
+
+        return new VlasnikSalonaDto(vlasnik);
+    }
 }

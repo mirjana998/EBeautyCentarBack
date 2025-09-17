@@ -1,5 +1,6 @@
 package com.example.ebeautycentar.controller;
 
+import com.example.ebeautycentar.dto.KorisnikDto;
 import com.example.ebeautycentar.dto.VlasnikSalonaDto;
 import com.example.ebeautycentar.dto.VlasnikSalonaLoginDto;
 import com.example.ebeautycentar.entity.Korisnik;
@@ -39,6 +40,12 @@ public class VlasnikSalonaController {
             }
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<VlasnikSalonaDto> kreirajVlasnika(@RequestBody KorisnikDto korisnikDto) {
+        VlasnikSalonaDto noviVlasnik = vlasnikSalonaService.kreirajVlasnika(korisnikDto);
+        return ResponseEntity.ok(noviVlasnik);
     }
 
     @PutMapping("/{vlasnikId}/subscription")

@@ -9,15 +9,15 @@ import java.util.Objects;
  * DTO for {@link Korisnik}
  */
 public class KorisnikDto implements Serializable {
-    private final Long id;
-    private final String ime;
-    private final String prezime;
-    private final String brojTelefona;
-    private final String email;
-    private final String korisnickoIme;
-    private final String lozinka;
-    private final String status;
-    private final String clerkUserId;
+    private  Long id;
+    private  String ime;
+    private  String prezime;
+    private  String brojTelefona;
+    private  String email;
+    private  String korisnickoIme;
+    private  String lozinka;
+    private  String status;
+    private  String clerkUserId;
 
     public KorisnikDto(Long id, String ime, String prezime, String brojTelefona,
                        String email, String korisnickoIme, String lozinka,
@@ -33,6 +33,8 @@ public class KorisnikDto implements Serializable {
         this.clerkUserId = clerkUserId;
     }
 
+    public KorisnikDto(){}
+
     public KorisnikDto(Korisnik korisnik) {
         this.id = korisnik.getId();
         this.ime = korisnik.getIme();
@@ -42,8 +44,9 @@ public class KorisnikDto implements Serializable {
         this.korisnickoIme = korisnik.getKorisnickoIme();
         this.lozinka = korisnik.getLozinka();
         this.status = korisnik.getStatus();
-        this.clerkUserId = korisnik.getClerkUserId(); // ✅ mapiranje iz entiteta
+        this.clerkUserId = korisnik.getClerkUserId();
     }
+
 
     public Long getId() {
         return id;
