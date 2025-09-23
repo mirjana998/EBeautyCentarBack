@@ -86,4 +86,9 @@ public class VlasnikSalonaService {
 
         return new VlasnikSalonaDto(vlasnik);
     }
+
+    public List<VlasnikSalona> getAllVlasnici() {
+        return vlasnikSalonaRepository.findAll();
+    }
+
 }
