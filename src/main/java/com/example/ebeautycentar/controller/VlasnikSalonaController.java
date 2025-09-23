@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -75,6 +76,15 @@ public class VlasnikSalonaController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<VlasnikSalonaDto>> getAllVlasnici() {
+        List<VlasnikSalona> vlasnici = vlasnikSalonaService.getAllVlasnici();
+        List<VlasnikSalonaDto> dtos = vlasnici.stream()
+                .map(VlasnikSalonaDto::new)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
 }

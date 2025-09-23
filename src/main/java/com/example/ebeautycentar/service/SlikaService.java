@@ -4,6 +4,7 @@ package com.example.ebeautycentar.service;
 import com.example.ebeautycentar.dto.SlikaDto;
 import com.example.ebeautycentar.entity.Slika;
 import com.example.ebeautycentar.repository.SlikaRepository;
+import com.example.ebeautycentar.repository.UslugaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,12 @@ public class SlikaService {
     private final SlikaRepository slikaRepository;
 
     @Autowired
-    public SlikaService(SlikaRepository slikaRepository) {
+    private final UslugaRepository uslugaRepository;
+
+    @Autowired
+    public SlikaService(SlikaRepository slikaRepository, UslugaRepository uslugaRepository) {
         this.slikaRepository = slikaRepository;
+        this.uslugaRepository= uslugaRepository;
     }
 
     public List<SlikaDto> getAllSlika() {

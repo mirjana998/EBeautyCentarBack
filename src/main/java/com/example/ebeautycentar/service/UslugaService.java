@@ -57,4 +57,11 @@ public class UslugaService {
         return uslugaRepository.findByNaziv(naziv)
                 .orElseThrow(() -> new RuntimeException("Usluga nije pronađena"));
     }
+
+    public Usluga kreirajUslugu(String naziv, String status) {
+        Usluga usluga = new Usluga();
+        usluga.setNaziv(naziv);
+        usluga.setStatus(status);
+        return uslugaRepository.save(usluga);
+    }
 }
