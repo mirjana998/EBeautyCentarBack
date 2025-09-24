@@ -4,6 +4,7 @@ package com.example.ebeautycentar.service;
 import com.example.ebeautycentar.dto.KorisnikDto;
 import com.example.ebeautycentar.dto.VlasnikSalonaDto;
 import com.example.ebeautycentar.entity.Korisnik;
+import com.example.ebeautycentar.entity.Uloga;
 import com.example.ebeautycentar.entity.VlasnikSalona;
 import com.example.ebeautycentar.repository.KorisnikRepository;
 import com.example.ebeautycentar.repository.VlasnikSalonaRepository;
@@ -21,11 +22,14 @@ public class VlasnikSalonaService {
     private final VlasnikSalonaRepository vlasnikSalonaRepository;
     @Autowired
     private final KorisnikRepository korisnikRepository;
+    @Autowired
+    private final UlogaService ulogaService;
 
     @Autowired
-    public VlasnikSalonaService(VlasnikSalonaRepository vlasnikSalonaRepository,KorisnikRepository korisnikRepository) {
+    public VlasnikSalonaService(VlasnikSalonaRepository vlasnikSalonaRepository,KorisnikRepository korisnikRepository, UlogaService ulogaService) {
         this.vlasnikSalonaRepository = vlasnikSalonaRepository;
         this.korisnikRepository = korisnikRepository;
+        this.ulogaService = ulogaService;
     }
 
     public List<VlasnikSalonaDto> getAllKorisnik() {
@@ -77,6 +81,8 @@ public class VlasnikSalonaService {
         korisnik.setLozinka(korisnikDto.getLozinka());
         korisnik.setStatus("A");
         korisnik.setClerkUserId(null);
+        Optional<Uloga> uloga = ulogaService.getUlogaById(2);
+        korisnik.setUloga(uloga.get());
         korisnik = korisnikRepository.save(korisnik);
 
         VlasnikSalona vlasnik = new VlasnikSalona();

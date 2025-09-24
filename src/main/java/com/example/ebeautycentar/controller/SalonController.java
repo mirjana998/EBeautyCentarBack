@@ -3,6 +3,7 @@ package com.example.ebeautycentar.controller;
 import com.example.ebeautycentar.dto.KorisnikDto;
 import com.example.ebeautycentar.dto.RezervacijaSalonDto;
 import com.example.ebeautycentar.dto.SalonDto;
+import com.example.ebeautycentar.dto.SalonPutDto;
 import com.example.ebeautycentar.entity.Korisnik;
 import com.example.ebeautycentar.entity.Salon;
 import com.example.ebeautycentar.entity.Slika;
@@ -128,6 +129,32 @@ public class SalonController {
             listaDto.add(salonDto);
         }
         return ResponseEntity.ok(listaDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SalonDto> azurirajSalon(
+            @PathVariable Long id,
+            @RequestBody SalonPutDto salonDto
+    ) {
+        Optional<Salon> salonOptional = salonService.getSalonById(id);
+        if (salonOptional.isPresent()) {
+            Salon salon = salonOptional.get();
+            if (salonDto.getNaziv() != null) {
+                salon.setNaziv(salonDto.getNaziv());
+            }
+            if (salonDto.getEmail() != null) {
+                salon.setEmail(salonDto.getEmail());
+            }
+            if (salonDto.getBrojTelefona() != null) {
+                salon.setBrojTelefona(salonDto.getBrojTelefona());
+            }
+
+            Salon sacuvanSalon = salonService.saveSalon(salon);
+            SalonDto updatedDto = new SalonDto(sacuvanSalon);
+            return ResponseEntity.ok(updatedDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
