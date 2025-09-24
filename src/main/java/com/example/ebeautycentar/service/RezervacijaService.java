@@ -28,13 +28,8 @@ public class RezervacijaService {
         this.transakcijaRepository=transakcijaRepository;
     }
 
-    public List<RezervacijaDto> getAllRezervacija() {
-        List<Rezervacija> rezervacijaList = rezervacijaRepository.findAll();
-        List<RezervacijaDto> rezervacijaDtoList = new ArrayList<>();
-        for(Rezervacija rezervacija : rezervacijaList) {
-            rezervacijaDtoList.add(new RezervacijaDto(rezervacija));
-        }
-        return rezervacijaDtoList;
+    public List<Rezervacija> getAllRezervacija() {
+       return rezervacijaRepository.findAll();
     }
 
 

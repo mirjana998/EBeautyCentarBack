@@ -8,6 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.*;
@@ -64,6 +66,31 @@ public class RezervacijaController {
         // System.out.println("PREKLAPANJE: " + zakazanaRezervacija.getTerminPocetkaUsluge() + " " + pocetakUpitneRezervacije);
         return true;
 
+    }
+
+    @Scheduled(fixedRate = 20 * 60 * 1000) // svakih 20 minuta
+    @Transactional
+    public void automatskiZavrsiIstekleRezervacije() {
+        System.out.println("Pokreće se scheduler za provjeru isteklih rezervacija...");
+        List<Rezervacija> rezervacije = rezervacijaService.getAllRezervacija();
+        Instant sada = Instant.now();
+
+        for (Rezervacija r : rezervacije) {
+            if ("P".equals(r.getStatus()) && r.getTerminZavršetkaUsluge() == null) {
+                SalonUsluga usluga = r.getZaposleniSalonUsluga().getSalonUsluga();
+                Instant zavrsetak = r.getTerminPocetkaUsluge()
+                        .plus(usluga.getTrajanjeUsluge().getHour(), ChronoUnit.HOURS)
+                        .plus(usluga.getTrajanjeUsluge().getMinute(), ChronoUnit.MINUTES)
+                        .plus(usluga.getTrajanjeUsluge().getSecond(), ChronoUnit.SECONDS);
+
+                if (sada.isAfter(zavrsetak)) {
+                    r.setStatus("Z");
+                    r.setTerminZavršetkaUsluge(sada);
+                    rezervacijaService.saveRezervacija(r);
+                    System.out.println("Automatski završena rezervacija ID: " + r.getId());
+                }
+            }
+        }
     }
 
 

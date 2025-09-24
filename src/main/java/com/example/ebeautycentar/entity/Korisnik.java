@@ -1,9 +1,7 @@
 package com.example.ebeautycentar.entity;
 
 import jakarta.persistence.*;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "korisnik")
@@ -36,6 +34,19 @@ public class Korisnik {
 
     @Column(name = "clerk_user_id", unique = true, length=100)
     private String clerkUserId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ColumnDefault("1")
+    @JoinColumn(name = "uloga_id", nullable = false)
+    private Uloga uloga;
+
+    public Uloga getUloga() {
+        return uloga;
+    }
+
+    public void setUloga(Uloga uloga) {
+        this.uloga = uloga;
+    }
 
     // getteri i setteri
     public String getClerkUserId() {
@@ -109,5 +120,6 @@ public class Korisnik {
     public void setStatus(String status) {
         this.status = status;
     }
+
 
 }

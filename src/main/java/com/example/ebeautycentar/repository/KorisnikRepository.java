@@ -13,6 +13,6 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
     List<Korisnik> findByStatus(String status);
     Optional<Korisnik> findByEmail(String email);
     Optional<Korisnik> findByClerkUserId(String clerkUserId);
+    Optional<Korisnik> findByKorisnickoImeAndLozinka(String korisnickoIme, String lozinka);
     Optional<Korisnik> findByKorisnickoIme(String korisnickoIme);
-
 }

@@ -118,11 +118,12 @@ public class SalonService {
 
     public List<SalonDto>getPopularniSaloni()
     {
-        List<Salon>saloni=salonRepository.findPopularni("I", "A");
+        List<Salon>saloni=salonRepository.findPopularni("Z", "A");
         return saloni.stream()
                 .map(SalonDto::new)
                 .collect(Collectors.toList());
     }
+
     public Salon nadjiPoNazivu(String naziv) {
         return salonRepository.findByNaziv(naziv)
                 .orElseThrow(() -> new RuntimeException("Salon nije pronađen"));

@@ -6,38 +6,28 @@ import jakarta.persistence.*;
 @Table(name = "administrator")
 public class Administrator {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "korisnik_id", nullable = false)
+    private Long id;
 
-    @Column(name = "korisnicko_ime", nullable = false, length = 45)
-    private String korisnickoIme;
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "korisnik_id", nullable = false)
+    private Korisnik korisnik;
 
-    @Column(name = "lozinka", nullable = false, length = 45)
-    private String lozinka;
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getKorisnickoIme() {
-        return korisnickoIme;
+    public Korisnik getKorisnik() {
+        return korisnik;
     }
 
-    public void setKorisnickoIme(String korisnickoIme) {
-        this.korisnickoIme = korisnickoIme;
-    }
-
-    public String getLozinka() {
-        return lozinka;
-    }
-
-    public void setLozinka(String lozinka) {
-        this.lozinka = lozinka;
+    public void setKorisnik(Korisnik korisnik) {
+        this.korisnik = korisnik;
     }
 
 }
