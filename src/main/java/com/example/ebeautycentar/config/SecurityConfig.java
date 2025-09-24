@@ -51,8 +51,11 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
 
                         // Role-based endpoints
-                        //.requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/vlasnik_salona/**").hasAuthority("Vlasnik")
+                        //.requestMatchers("/auth/user/**").hasAunthority("ROLE_USER")
+                        //.requestMatchers("/vlasnik_salona/**").hasAuthority("Vlasnik")
+
+                        .requestMatchers("/radno_vrijeme/edit/**").hasAuthority("Vlasnik")
+                        .requestMatchers("/novost/edit/**").hasAuthority("Vlasnik")
 
                         // All other endpoints require authentication
                         .anyRequest().authenticated()

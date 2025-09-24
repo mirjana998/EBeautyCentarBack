@@ -10,11 +10,14 @@ import java.util.Objects;
  * DTO for {@link RadnoVrijeme}
  */
 public class RadnoVrijemeDto implements Serializable {
-    private final Long id;
-    private final DanUSedmiciDto danUSedmici;
-    private final LocalTime pocetakRadnoVrijeme;
-    private final LocalTime krajRadnoVrijeme;
-    private final Long salonId;
+    private  Long id;
+    private  DanUSedmiciDto danUSedmici;
+    private  LocalTime pocetakRadnoVrijeme;
+    private  LocalTime krajRadnoVrijeme;
+    private Long salonId;
+
+    public RadnoVrijemeDto() {
+    }
 
     public RadnoVrijemeDto(RadnoVrijeme radnoVrijeme) {
         this.id = radnoVrijeme.getId();

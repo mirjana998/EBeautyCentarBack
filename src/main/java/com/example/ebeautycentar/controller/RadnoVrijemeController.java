@@ -2,12 +2,14 @@ package com.example.ebeautycentar.controller;
 
 
 import com.example.ebeautycentar.dto.RadnoVrijemeDto;
+import com.example.ebeautycentar.dto.RadnoVrijemePutDto;
 import com.example.ebeautycentar.entity.RadnoVrijeme;
 import com.example.ebeautycentar.service.RadnoVrijemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,16 +52,13 @@ public class RadnoVrijemeController {
 
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RadnoVrijemeDto> updateRadnoVrijeme(@RequestBody RadnoVrijemeDto dto) {
-        Optional<RadnoVrijeme> radnoVrijemeOptional = radnoVrijemeService.getRadnoVrijemeById(dto.getId());
-        if(radnoVrijemeOptional.isPresent()) {
-            radnoVrijemeOptional.get().setPocetakRadnoVrijeme(dto.getPocetakRadnoVrijeme());
-            radnoVrijemeOptional.get().setKrajRadnoVrijeme(dto.getKrajRadnoVrijeme());
-            RadnoVrijeme rv = radnoVrijemeService.saveRadnoVrijeme(radnoVrijemeOptional.get());
-            return ResponseEntity.ok(new RadnoVrijemeDto(rv));
-        }
-        return ResponseEntity.badRequest().build();
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<RadnoVrijemeDto> updateRadnoVrijeme(@RequestBody RadnoVrijemePutDto dto) {
+        RadnoVrijeme radnoVrijeme = radnoVrijemeService.findRadnoVrijemeByDanUSedmiciIdAndSalonId(dto.getDanUSedmici(),dto.getSalonId());
+        radnoVrijeme.setPocetakRadnoVrijeme(LocalTime.parse(dto.getPocetakRadnoVrijeme()));
+        radnoVrijeme.setKrajRadnoVrijeme(LocalTime.parse(dto.getKrajRadnoVrijeme()));
+        RadnoVrijeme rv = radnoVrijemeService.saveRadnoVrijeme(radnoVrijeme);
+        return ResponseEntity.ok(new RadnoVrijemeDto(rv));
     }
 
 }
