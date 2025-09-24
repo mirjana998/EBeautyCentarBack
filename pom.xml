@@ -82,6 +82,11 @@
 		<artifactId>spring-security-test</artifactId>
 		<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.analytics</groupId>
+			<artifactId>google-analytics-data</artifactId>
+			<version>0.56.0</version> <!-- provjeri zadnju verziju -->
+		</dependency>
 	</dependencies>
 
 	<build>

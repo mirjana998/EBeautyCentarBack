@@ -49,7 +49,7 @@ public class NovostController {
             return ResponseEntity.ok(novosti);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<NovostDto> updateNovost(@RequestBody NovostDto dto) {
         Optional<Novost> novostDtoOptional = novostService.getNovostById(dto.getId());
         if(novostDtoOptional.isPresent()) {
