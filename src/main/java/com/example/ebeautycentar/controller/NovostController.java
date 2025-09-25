@@ -50,18 +50,23 @@ public class NovostController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<NovostDto> updateNovost(@RequestBody NovostDto dto) {
-        Optional<Novost> novostDtoOptional = novostService.getNovostById(dto.getId());
-        if(novostDtoOptional.isPresent()) {
-            novostDtoOptional.get().setSadrzaj(dto.getSadrzaj());
-            novostDtoOptional.get().setStatus(dto.getStatus());
-            novostDtoOptional.get().setNaslov(dto.getNaslov());
+    public ResponseEntity<NovostDto> updateNovost(
+            @PathVariable Long id,
+            @RequestBody NovostDto dto
+    ) {
+        Optional<Novost> novostOptional = novostService.getNovostById(id);
+        if(novostOptional.isPresent()) {
+            Novost novost = novostOptional.get();
+            novost.setNaslov(dto.getNaslov());
+            novost.setSadrzaj(dto.getSadrzaj());
+            novost.setStatus(dto.getStatus());
 
-            Novost sacuvana = novostService.saveNovost(novostDtoOptional.get());
+            Novost sacuvana = novostService.saveNovost(novost);
             return ResponseEntity.ok(new NovostDto(sacuvana));
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
+
 
     @PostMapping("/nova")
     public ResponseEntity<NovostDto> dodajNovuNovost(@RequestBody NovostDto dto) {
