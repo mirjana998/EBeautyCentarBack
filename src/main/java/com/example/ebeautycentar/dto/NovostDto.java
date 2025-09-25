@@ -10,13 +10,14 @@ import java.util.Objects;
  * DTO for {@link Novost}
  */
 public class NovostDto implements Serializable {
-    private final Long id;
-    private final Long salonId;
-    private final String naslov;
-    private final String sadrzaj;
-    private final Instant vrijemeKreiranja;
-    private final String status;
-    private final Long vlasnikSalonaId;
+
+    private Long id;
+    private Long salonId;
+    private String naslov;
+    private String sadrzaj;
+    private Instant vrijemeKreiranja;
+    private String status;
+    private Long vlasnikSalonaId;
 
     public NovostDto(Novost novost) {
         this.id = novost.getId();
@@ -28,32 +29,64 @@ public class NovostDto implements Serializable {
         this.vlasnikSalonaId = novost.getVlasnikSalona().getId();
     }
 
+    public NovostDto() {
+    }
+
+    // Getteri i setteri
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getSalonId() {
         return salonId;
     }
 
+    public void setSalonId(Long salonId) {
+        this.salonId = salonId;
+    }
+
     public String getNaslov() {
         return naslov;
+    }
+
+    public void setNaslov(String naslov) {
+        this.naslov = naslov;
     }
 
     public String getSadrzaj() {
         return sadrzaj;
     }
 
+    public void setSadrzaj(String sadrzaj) {
+        this.sadrzaj = sadrzaj;
+    }
+
     public Instant getVrijemeKreiranja() {
         return vrijemeKreiranja;
+    }
+
+    public void setVrijemeKreiranja(Instant vrijemeKreiranja) {
+        this.vrijemeKreiranja = vrijemeKreiranja;
     }
 
     public String getStatus() {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Long getVlasnikSalonaId() {
         return vlasnikSalonaId;
+    }
+
+    public void setVlasnikSalonaId(Long vlasnikSalonaId) {
+        this.vlasnikSalonaId = vlasnikSalonaId;
     }
 
     @Override

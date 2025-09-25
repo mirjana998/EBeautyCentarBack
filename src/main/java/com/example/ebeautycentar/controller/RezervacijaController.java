@@ -16,6 +16,7 @@ import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -336,5 +337,54 @@ public class RezervacijaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Neupjesno brisanje!");
         }
     }
+
+    @GetMapping("/analitika/dan")
+    public ResponseEntity<Map<LocalDate, Long>> brojRezervacijaPoDanu() {
+        List<Rezervacija> sveRezervacije = rezervacijaService.getAllRezervacija();
+
+        // Grupiranje po danu
+        Map<LocalDate, Long> rezervacijePoDanu = sveRezervacije.stream()
+                .collect(Collectors.groupingBy(
+                        r -> r.getTerminPocetkaUsluge()
+                                .atZone(ZoneId.of("Europe/Belgrade"))
+                                .toLocalDate(),
+                        Collectors.counting()
+                ));
+
+        return ResponseEntity.ok(rezervacijePoDanu);
+    }
+
+    @GetMapping("/analitika/dan/30days")
+    public ResponseEntity<List<Map<String, Object>>> brojRezervacijaPoZadnjih30Dana() {
+        List<Rezervacija> sveRezervacije = rezervacijaService.getAllRezervacija();
+
+        LocalDate today = LocalDate.now(ZoneId.of("Europe/Belgrade"));
+        LocalDate startDate = today.minusDays(29); // zadnjih 30 dana
+
+        // Grupiranje rezervacija po danu
+        Map<LocalDate, Long> rezervacijePoDanu = sveRezervacije.stream()
+                .filter(r -> {
+                    LocalDate datum = r.getTerminPocetkaUsluge().atZone(ZoneId.of("Europe/Belgrade")).toLocalDate();
+                    return !datum.isBefore(startDate);
+                })
+                .collect(Collectors.groupingBy(
+                        r -> r.getTerminPocetkaUsluge().atZone(ZoneId.of("Europe/Belgrade")).toLocalDate(),
+                        Collectors.counting()
+                ));
+
+        // Kreiranje liste svih dana sa 0 kad nema rezervacija
+        List<Map<String, Object>> result = startDate.datesUntil(today.plusDays(1))
+                .map(date -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("date", date.toString());
+                    m.put("bookings", rezervacijePoDanu.getOrDefault(date, 0L));
+                    return m;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
+    }
+
+
 
 }
