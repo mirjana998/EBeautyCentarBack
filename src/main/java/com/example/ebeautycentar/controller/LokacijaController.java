@@ -54,4 +54,10 @@ public class LokacijaController {
         List<String> gradovi = lokacijaService.getSviGradovi();
         return ResponseEntity.ok(gradovi);
     }
+
+    @GetMapping("/drzave")
+    public ResponseEntity<List<String>> getDrzave() {
+        List<String> drzave = lokacijaService.getSveDrzave();
+        return ResponseEntity.ok(drzave);
+    }
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface LokacijaRepository extends JpaRepository<Lokacija, Long> {
     @Query("SELECT DISTINCT l.grad FROM Lokacija l")
     List<String> findDistinctGrad();
+    @Query("SELECT DISTINCT l.drzava FROM Lokacija l")
+    List<String> findDistinctDrzava();
 }

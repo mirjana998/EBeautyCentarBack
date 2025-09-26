@@ -54,4 +54,8 @@ public class LokacijaService {
         return lokacijaRepository.findDistinctGrad();
     }
 
+    public List<String> getSveDrzave() {
+        return lokacijaRepository.findDistinctDrzava();
+    }
+
 }
