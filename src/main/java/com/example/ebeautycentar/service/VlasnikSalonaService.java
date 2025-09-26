@@ -97,4 +97,17 @@ public class VlasnikSalonaService {
         return vlasnikSalonaRepository.findAll();
     }
 
+    public VlasnikSalona updateVlasnik(Long vlasnikId, String ime, String prezime, String brojTelefona, String email) {
+        VlasnikSalona vlasnik = vlasnikSalonaRepository.findById(vlasnikId)
+                .orElseThrow(() -> new RuntimeException("Vlasnik salona ne postoji"));
+
+        Korisnik korisnik = vlasnik.getKorisnik();
+        korisnik.setIme(ime);
+        korisnik.setPrezime(prezime);
+        korisnik.setBrojTelefona(brojTelefona);
+        korisnik.setEmail(email);
+
+        return vlasnikSalonaRepository.save(vlasnik);
+    }
+
 }

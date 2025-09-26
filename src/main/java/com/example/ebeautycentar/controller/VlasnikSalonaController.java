@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Optional;
 
@@ -88,6 +87,12 @@ public class VlasnikSalonaController {
                 .map(VlasnikSalonaDto::new)
                 .toList();
         return ResponseEntity.ok(dtos);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteVlasnikSalona(@PathVariable Long id) {
+        vlasnikSalonaService.deleteVlasnikSalona(id);
+        return ResponseEntity.ok("Obrisan vlasnik salona!");
     }
 
 }

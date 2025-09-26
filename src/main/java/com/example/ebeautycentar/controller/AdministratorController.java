@@ -3,8 +3,11 @@ package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.dto.AdministratorDto;
 import com.example.ebeautycentar.dto.AdministratorLoginDto;
+import com.example.ebeautycentar.entity.VlasnikSalona;
 import com.example.ebeautycentar.service.AdministratorService;
+import com.example.ebeautycentar.service.VlasnikSalonaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +27,12 @@ public class AdministratorController {
     private final AdministratorService administratorService;
 
     @Autowired
-    public AdministratorController(AdministratorService administratorService) {
+    private final VlasnikSalonaService vlasnikSalonaService;
+
+    @Autowired
+    public AdministratorController(AdministratorService administratorService, VlasnikSalonaService vlasnikSalonaService) {
         this.administratorService = administratorService;
+        this.vlasnikSalonaService=vlasnikSalonaService;
     }
 //
 //    @PostMapping("/login")
@@ -53,5 +60,22 @@ public class AdministratorController {
 //        System.out.println(administratorService.findByKorisnickoIme("admin"));
 //        return ResponseEntity.ok("administrator");
 //    }
+
+    @PutMapping("/vlasnik/{vlasnikId}")
+    public ResponseEntity<?> updateVlasnik(
+            @PathVariable Long vlasnikId,
+            @RequestParam String ime,
+            @RequestParam String prezime,
+            @RequestParam String brojTelefona,
+            @RequestParam String email
+    ) {
+        try {
+            VlasnikSalona updated = vlasnikSalonaService.updateVlasnik(vlasnikId, ime, prezime, brojTelefona, email);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("poruka", e.getMessage()));
+        }
+    }
 
 }
