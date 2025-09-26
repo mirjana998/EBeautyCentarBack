@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -176,6 +177,7 @@ public class SalonService {
         salon.setDatumOtvaranja(datumOtvaranja);
         salon.setDatumZatvaranja(datumZatvaranja);
         salon.setStatus("A");
+        salon.setProsjecnaOcjena(BigDecimal.ZERO);
         salonRepository.save(salon); // prvo spremamo salon da bismo imali ID
 
         if (slikaFile != null && !slikaFile.isEmpty()) {
