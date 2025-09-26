@@ -80,6 +80,7 @@ public class UslugaService {
         slika.setNaziv(file.getOriginalFilename());
         slika.setSlika(file.getBytes());
         slika.setStatus("A");
+        slika.setVrsta("G");
         slika.setUsluga(usluga);
         slika.setSalon(salon);
         slikaRepository.save(slika);

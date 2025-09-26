@@ -3,6 +3,7 @@ package com.example.ebeautycentar.controller;
 
 import com.example.ebeautycentar.dto.AdministratorDto;
 import com.example.ebeautycentar.dto.AdministratorLoginDto;
+import com.example.ebeautycentar.dto.VlasnikSalonaUpdateDto;
 import com.example.ebeautycentar.entity.VlasnikSalona;
 import com.example.ebeautycentar.service.AdministratorService;
 import com.example.ebeautycentar.service.VlasnikSalonaService;
@@ -71,7 +72,7 @@ public class AdministratorController {
     ) {
         try {
             VlasnikSalona updated = vlasnikSalonaService.updateVlasnik(vlasnikId, ime, prezime, brojTelefona, email);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(new VlasnikSalonaUpdateDto(updated));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("poruka", e.getMessage()));
