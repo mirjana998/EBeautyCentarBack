@@ -13,4 +13,6 @@ public interface SlikaRepository extends JpaRepository<Slika, Long> {
     List<Slika> findBySalonIdAndStatusAndVrsta(Long salonId, String status, String vrsta);
 
     Optional<Slika> findByUslugaId(Long uslugaId);
+
+    Optional<Slika> findBySalonId(Long salonId);
 }

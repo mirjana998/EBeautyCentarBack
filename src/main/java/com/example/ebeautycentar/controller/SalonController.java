@@ -1,12 +1,10 @@
 package com.example.ebeautycentar.controller;
 
-import com.example.ebeautycentar.dto.KorisnikDto;
-import com.example.ebeautycentar.dto.RezervacijaSalonDto;
-import com.example.ebeautycentar.dto.SalonDto;
-import com.example.ebeautycentar.dto.SalonPutDto;
+import com.example.ebeautycentar.dto.*;
 import com.example.ebeautycentar.entity.Korisnik;
 import com.example.ebeautycentar.entity.Salon;
 import com.example.ebeautycentar.entity.Slika;
+import com.example.ebeautycentar.repository.SlikaRepository;
 import com.example.ebeautycentar.service.RezervacijaService;
 import com.example.ebeautycentar.service.SalonService;
 import com.example.ebeautycentar.service.SlikaService;
@@ -32,12 +30,14 @@ public class SalonController {
     private final SalonService salonService;
     private final RezervacijaService rezervacijaService;
     private final SlikaService slikaService;
+    private final SlikaRepository slikaRepository;
 
     @Autowired
-    public SalonController(SalonService salonService, RezervacijaService rezervacijaService, SlikaService slikaService) {
+    public SalonController(SalonService salonService, RezervacijaService rezervacijaService, SlikaService slikaService, SlikaRepository slikaRepository) {
         this.salonService = salonService;
         this.rezervacijaService = rezervacijaService;
         this.slikaService = slikaService;
+        this.slikaRepository = slikaRepository;
     }
 
 
@@ -178,12 +178,28 @@ public class SalonController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datumZatvaranja,
             @RequestParam(required = false) MultipartFile slikaFile
     ) {
-        try {
+
             Salon salon = salonService.addSalon(naziv, email, brojTelefona, tipId,datumOtvaranja,datumZatvaranja, vlasnikId, ulica,broj,grad,drzava,postanskiBroj,slikaFile);
-            return ResponseEntity.ok(salon);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("poruka", e.getMessage()));
-        }
+
+        SalonKreirajDTO dto = new SalonKreirajDTO();
+        dto.setId(salon.getId());
+        dto.setNaziv(salon.getNaziv());
+        dto.setEmail(salon.getEmail());
+        dto.setBrojTelefona(salon.getBrojTelefona());
+        dto.setTipNaziv(salon.getTip().getNaziv());
+        dto.setVlasnikIme(salon.getVlasnikSalona().getKorisnik().getIme());
+        dto.setVlasnikPrezime(salon.getVlasnikSalona().getKorisnik().getPrezime());
+        dto.setUlica(salon.getLokacija().getUlica());
+        dto.setBroj(salon.getLokacija().getBroj());
+        dto.setGrad(salon.getLokacija().getGrad());
+        dto.setDrzava(salon.getLokacija().getDrzava());
+        dto.setPostanskiBroj(salon.getLokacija().getPostanskiBroj());
+        dto.setDatumOtvaranja(salon.getDatumOtvaranja());
+        dto.setDatumZatvaranja(salon.getDatumZatvaranja());
+        slikaRepository.findBySalonId(salon.getId()).ifPresent(slika -> {
+            dto.setSlikaNaziv(slika.getNaziv());
+        });
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
 }
