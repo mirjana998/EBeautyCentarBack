@@ -2,13 +2,14 @@ package com.example.ebeautycentar.service;
 
 import com.example.ebeautycentar.dto.KorisnikDto;
 import com.example.ebeautycentar.dto.SalonDto;
-import com.example.ebeautycentar.entity.Korisnik;
-import com.example.ebeautycentar.entity.Salon;
-import com.example.ebeautycentar.repository.KorisnikRepository;
-import com.example.ebeautycentar.repository.SalonRepository;
+import com.example.ebeautycentar.entity.*;
+import com.example.ebeautycentar.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,24 @@ public class SalonService {
     private final SalonRepository salonRepository;
 
     @Autowired
-    public SalonService(SalonRepository salonRepository) {
+    private final TipRepository tipRepository;
+
+    @Autowired
+    private final VlasnikSalonaRepository vlasnikSalonaRepository;
+
+    @Autowired
+    private final LokacijaRepository lokacijaRepository;
+
+    @Autowired
+    private final SlikaRepository slikaRepository;
+
+    @Autowired
+    public SalonService(SalonRepository salonRepository, TipRepository tipRepository, VlasnikSalonaRepository vlasnikSalonaRepository,LokacijaRepository lokacijaRepository, SlikaRepository slikaRepository) {
         this.salonRepository = salonRepository;
+        this.tipRepository = tipRepository;
+        this.vlasnikSalonaRepository=vlasnikSalonaRepository;
+        this.lokacijaRepository=lokacijaRepository;
+        this.slikaRepository=slikaRepository;
     }
 
     public List<SalonDto> getAllSalon() {
@@ -131,5 +148,51 @@ public class SalonService {
 
     public List<Salon> findByVlasnikSalonaId(Long vlasniSalonaId) {
         return salonRepository.findByVlasnikSalonaId(vlasniSalonaId);
+    }
+
+    public Salon addSalon(String naziv, String email, String brojTelefona,
+                          Integer tipId, LocalDate datumOtvaranja, LocalDate datumZatvaranja, Long vlasnikId, String ulica,String broj,String grad,String drzava,String postanskiBroj,
+                          MultipartFile slikaFile) {
+
+        Tip tip = tipRepository.findById(tipId).orElseThrow(() -> new RuntimeException("Tip ne postoji"));
+        VlasnikSalona vlasnik = vlasnikSalonaRepository.findById(vlasnikId)
+                .orElseThrow(() -> new RuntimeException("Vlasnik ne postoji"));
+
+        Lokacija lokacija = new Lokacija();
+        lokacija.setUlica(ulica);
+        lokacija.setBroj(broj);
+        lokacija.setPostanskiBroj(postanskiBroj);
+        lokacija.setGrad(grad);
+        lokacija.setDrzava(drzava);
+        lokacijaRepository.save(lokacija);
+
+        Salon salon = new Salon();
+        salon.setNaziv(naziv);
+        salon.setEmail(email);
+        salon.setBrojTelefona(brojTelefona);
+        salon.setTip(tip);
+        salon.setVlasnikSalona(vlasnik);
+        salon.setLokacija(lokacija);
+        salon.setDatumOtvaranja(datumOtvaranja);
+        salon.setDatumZatvaranja(datumZatvaranja);
+        salon.setStatus("A");
+        salonRepository.save(salon); // prvo spremamo salon da bismo imali ID
+
+        if (slikaFile != null && !slikaFile.isEmpty()) {
+            Slika slika = new Slika();
+            slika.setNaziv(slikaFile.getOriginalFilename());
+            slika.setSalon(salon);
+            slika.setStatus("A");
+            slika.setVrsta("G");
+            slika.setUsluga(null); // jer je za salon
+            try {
+                slika.setSlika(slikaFile.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Greška pri čitanju slike");
+            }
+            slikaRepository.save(slika);
+        }
+
+        return salon;
     }
 }

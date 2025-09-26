@@ -11,11 +11,16 @@ import com.example.ebeautycentar.service.RezervacijaService;
 import com.example.ebeautycentar.service.SalonService;
 import com.example.ebeautycentar.service.SlikaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -154,6 +159,30 @@ public class SalonController {
             return ResponseEntity.ok(updatedDto);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/dodaj")
+    public ResponseEntity<?> addSalon(
+            @RequestParam String naziv,
+            @RequestParam String email,
+            @RequestParam String brojTelefona,
+            @RequestParam Integer tipId,
+            @RequestParam Long vlasnikId,
+            @RequestParam String ulica,
+            @RequestParam String broj,
+            @RequestParam String grad,
+            @RequestParam String drzava,
+            @RequestParam String postanskiBroj,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datumOtvaranja,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate datumZatvaranja,
+            @RequestParam(required = false) MultipartFile slikaFile
+    ) {
+        try {
+            Salon salon = salonService.addSalon(naziv, email, brojTelefona, tipId,datumOtvaranja,datumZatvaranja, vlasnikId, ulica,broj,grad,drzava,postanskiBroj,slikaFile);
+            return ResponseEntity.ok(salon);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("poruka", e.getMessage()));
         }
     }
 
