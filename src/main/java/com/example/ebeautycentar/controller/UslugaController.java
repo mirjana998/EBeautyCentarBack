@@ -9,10 +9,13 @@ import com.example.ebeautycentar.service.SalonService;
 import com.example.ebeautycentar.service.SlikaService;
 import com.example.ebeautycentar.service.UslugaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -21,14 +24,11 @@ import java.util.Optional;
 public class UslugaController {
 
     private final UslugaService uslugaService;
-    private final SlikaService slikaService;
-    private final SalonService salonService;
+
 
     @Autowired
-    public UslugaController(UslugaService uslugaService, SlikaService slikaService, SalonService salonService) {
+    public UslugaController(UslugaService uslugaService) {
         this.uslugaService = uslugaService;
-        this.slikaService= slikaService;
-        this.salonService=salonService;
     }
 
     @GetMapping
@@ -53,33 +53,27 @@ public class UslugaController {
     }
 
     @PostMapping("/dodaj")
-    public ResponseEntity<String> dodajUslugu(
-            @RequestParam("naziv") String naziv,
-            @RequestParam("nazivSlike") String nazivSlike,
-            @RequestParam("idSalona") Long idSalona) {
+    public ResponseEntity<?> dodajUslugu(
+            @RequestParam Long salonId,
+            @RequestParam String naziv,
+            @RequestParam("slika") MultipartFile file) {
+
         try {
-            Usluga novaUsluga = new Usluga();
-            novaUsluga.setNaziv(naziv);
-            novaUsluga.setStatus("A");
-            Usluga sacuvanaUsluga = uslugaService.saveUsluga(novaUsluga);
-
-            Salon salon = salonService.getSalonById(idSalona)
-                    .orElseThrow(() -> new RuntimeException("Salon nije pronađen!"));
-
-            Slika novaSlika = new Slika();
-            novaSlika.setNaziv(nazivSlike);
-            novaSlika.setVrsta("G");
-            novaSlika.setStatus("A");
-            novaSlika.setUsluga(sacuvanaUsluga);
-            novaSlika.setSalon(salon);
-
-            slikaService.saveSlika(novaSlika);
-
-            return ResponseEntity.ok("Usluga i slika su uspješno dodane!");
-
+            Usluga usluga = uslugaService.dodajUsluguSaSlikom(naziv,salonId,file);
+            return ResponseEntity.ok(Map.of(
+                    "uslugaId", usluga.getId(),
+                    "naziv", usluga.getNaziv(),
+                    "poruka", "Usluga dodana sa slikom: " + file.getOriginalFilename()
+            ));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Greška prilikom dodavanja usluge!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("poruka", "Neuspjelo dodavanje usluge", "greska", e.getMessage()));
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUsluga(@PathVariable Long id) {
+        uslugaService.deleteUsluga(id);
+        return ResponseEntity.ok("Obrisana usluga!");
     }
 }
