@@ -76,4 +76,10 @@ public class UslugaController {
         uslugaService.deleteUsluga(id);
         return ResponseEntity.ok("Obrisana usluga!");
     }
+    @DeleteMapping("/deactivate/{id}")
+    public ResponseEntity<String> deactivateUsluga(@PathVariable Long id) {
+        uslugaService.deactivateUsluga(id);
+        return ResponseEntity.ok("Usluga je deaktivirana!");
+    }
+
 }
