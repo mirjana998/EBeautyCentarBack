@@ -18,7 +18,7 @@ public class Posjeta {
 
     private String ipAdresa;
 
-    private String userAgent; // dodaj ovo
+    private String userAgent;
 
     public Posjeta() {}
 
@@ -29,7 +29,6 @@ public class Posjeta {
         this.userAgent = userAgent;
     }
 
-    // getters i setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

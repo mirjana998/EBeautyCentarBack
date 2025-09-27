@@ -32,7 +32,7 @@ public class PosjetaController {
         this.salonService = salonService;
     }
 
-    // Loguje posjetu
+    // Loguje posjetu za salon
     @PostMapping("/{salonId}")
     public ResponseEntity<Void> logPosjeta(@PathVariable Long salonId, HttpServletRequest request) {
         Salon salon = salonService.getSalonById(salonId).orElse(null);
@@ -43,7 +43,7 @@ public class PosjetaController {
         return ResponseEntity.ok().build();
     }
 
-    // Vrati sve posjete za salon
+    // Vraca sve posjete za salon
     @GetMapping("/salon/{salonId}")
     public ResponseEntity<List<PosjetaDto>> getPosjete(@PathVariable Long salonId) {
         List<PosjetaDto> dtoList = posjetaService.getAllPosjeteForSalon(salonId)
@@ -52,7 +52,8 @@ public class PosjetaController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
-    // Loguje posjetu za cijeli sajt
+
+    //loguje posjetu za cijeli sajt
     @PostMapping("/log")
     public ResponseEntity<Void> logGlobalnuPosjetu(@RequestHeader(value="User-Agent", required=false) String userAgent,
                                                    HttpServletRequest request) {
@@ -63,8 +64,7 @@ public class PosjetaController {
         return ResponseEntity.ok().build();
     }
 
-
-    // Vrati sve posjete za cijeli sajt
+//vraca sve posjete za cijeli sajt
     @GetMapping("/all")
     public ResponseEntity<List<PosjetaDto>> getAllPosjete() {
         List<PosjetaDto> dtoList = posjetaService.getAllPosjete()
@@ -95,30 +95,31 @@ public class PosjetaController {
 
         return ResponseEntity.ok(result);
     }
+
+    //vraca posjete u zadnjih 30dana
     @GetMapping("/stats/daily/30days")
     public ResponseEntity<List<Map<String, Object>>> getLast30DaysVisits() {
         List<Posjeta> posjete = posjetaService.getAllPosjete();
 
         LocalDate today = LocalDate.now(ZoneId.of("UTC"));
-        LocalDate startDate = today.minusDays(29); // zadnjih 30 dana uključujući danas
+        LocalDate startDate = today.minusDays(29);
 
-        // Prebrojavanje posjeta po danima
         Map<LocalDate, Long> dailyCounts = posjete.stream()
                 .filter(p -> {
                     LocalDate date = p.getVrijeme().atZone(ZoneId.of("UTC")).toLocalDate();
-                    return !date.isBefore(startDate); // samo zadnjih 30 dana
+                    return !date.isBefore(startDate);
                 })
                 .collect(Collectors.groupingBy(
                         p -> p.getVrijeme().atZone(ZoneId.of("UTC")).toLocalDate(),
                         Collectors.counting()
                 ));
 
-        // Generisanje liste sa svim danima
+
         List<Map<String, Object>> result = startDate.datesUntil(today.plusDays(1))
                 .map(date -> {
                     Map<String, Object> m = new HashMap<>();
                     m.put("date", date.toString());
-                    m.put("pageviews", dailyCounts.getOrDefault(date, 0L)); // 0 ako nema posjeta
+                    m.put("pageviews", dailyCounts.getOrDefault(date, 0L));
                     return m;
                 })
                 .collect(Collectors.toList());
