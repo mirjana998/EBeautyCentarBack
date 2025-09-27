@@ -87,4 +87,18 @@ public class UslugaService {
 
         return usluga;
     }
+    public void deactivateUsluga(Long id) {
+        Usluga usluga = uslugaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usluga sa ID " + id + " ne postoji"));
+
+        if ("A".equals(usluga.getStatus())) {
+            usluga.setStatus("F"); // deaktivacija
+        } else if ("F".equals(usluga.getStatus())) {
+            usluga.setStatus("A"); // reaktivacija
+        } else {
+            throw new RuntimeException("Nepoznat status usluge: " + usluga.getStatus());
+        }
+
+        uslugaRepository.save(usluga);
+    }
 }
