@@ -49,6 +49,24 @@ public class SlikaController {
         }
     }
 
+    @GetMapping("/salon/{salonId}")
+    public ResponseEntity<?> getSlikaBySalon(@PathVariable Long salonId) {
+        Optional<Slika> slikaOpt = slikaRepository.findBySalonId(salonId);
+
+        if (slikaOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("poruka", "Slika za ovu uslugu ne postoji"));
+        }
+
+        Slika slika = slikaOpt.get();
+        String base64 = Base64.getEncoder().encodeToString(slika.getSlika());
+
+        return ResponseEntity.ok(Map.of(
+                "naziv", slika.getNaziv(),
+                "slikaBase64", base64
+        ));
+    }
+
     //end point kako bi se ucitala slika na frontu za datu uslugu znaci samo da se prikaze usluga i njena slika
     @GetMapping("/usluga/{uslugaId}")
     public ResponseEntity<?> getSlikaByUsluga(@PathVariable Long uslugaId) {

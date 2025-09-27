@@ -67,11 +67,12 @@ public class AdministratorController {
             @PathVariable Long vlasnikId,
             @RequestParam String ime,
             @RequestParam String prezime,
+            @RequestParam String korisnickoIme,
             @RequestParam String brojTelefona,
             @RequestParam String email
     ) {
         try {
-            VlasnikSalona updated = vlasnikSalonaService.updateVlasnik(vlasnikId, ime, prezime, brojTelefona, email);
+            VlasnikSalona updated = vlasnikSalonaService.updateVlasnik(vlasnikId, ime, prezime,korisnickoIme, brojTelefona, email);
             return ResponseEntity.ok(new VlasnikSalonaUpdateDto(updated));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
