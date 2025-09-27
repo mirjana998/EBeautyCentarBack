@@ -136,7 +136,7 @@ public class SalonService {
 
     public List<SalonDto>getPopularniSaloni()
     {
-        List<Salon>saloni=salonRepository.findPopularni("Z", "A");
+        List<Salon>saloni=salonRepository.findPopularni();
         return saloni.stream()
                 .map(SalonDto::new)
                 .collect(Collectors.toList());
