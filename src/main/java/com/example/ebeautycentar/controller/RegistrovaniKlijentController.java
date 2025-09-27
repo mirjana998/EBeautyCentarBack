@@ -4,6 +4,7 @@ import com.example.ebeautycentar.dto.ClerkRegistrovaniKlijentDto;
 import com.example.ebeautycentar.dto.RegistrovaniKlijentDto;
 import com.example.ebeautycentar.entity.Korisnik;
 import com.example.ebeautycentar.entity.RegistrovaniKlijent;
+import com.example.ebeautycentar.entity.Uloga;
 import com.example.ebeautycentar.service.ClerkService;
 import com.example.ebeautycentar.service.KorisnikService;
 import com.example.ebeautycentar.service.RegistrovaniKlijentService;
@@ -100,6 +101,12 @@ public class RegistrovaniKlijentController {
                     korisnik.setStatus("A");
                     korisnik.setLozinka("korisnik");
                     korisnik.setClerkUserId(noviKlijent.getClerkUserId());
+
+
+                    Uloga defaultUloga = new Uloga();
+                    defaultUloga.setId(1);
+                    korisnik.setUloga(defaultUloga);
+
                     korisnik = korisnikService.saveKorisnik(korisnik);
 
                     RegistrovaniKlijent registrovaniKlijent = new RegistrovaniKlijent();
@@ -119,6 +126,7 @@ public class RegistrovaniKlijentController {
             return ResponseEntity.status(500).build();
         }
     }
+
 
 
     @PostMapping("/delete")
