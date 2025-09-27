@@ -29,16 +29,20 @@ public interface SalonRepository extends JpaRepository<Salon, Long> {
     List<Salon>findByGradAndUslugaAndNaziv(@Param("grad") String grad,@Param("usluga") Integer usluga, @Param("naziv") String naziv,@Param("status") String status);
 
     @Query(value = """
-    select sal.id, sal.naziv, sal.email, sal.broj_telefona, sal.tip_id, sal.datum_otvaranja, sal.status, sal.datum_zatvaranja, sal.vlasnik_salona_id, sal.lokacija_id, sal.prosjecna_ocjena from
-     (select s.*, count(r.id) as c
+    select sal.id, sal.naziv, sal.email, sal.broj_telefona, sal.tip_id, sal.datum_otvaranja, 
+           sal.status, sal.datum_zatvaranja, sal.vlasnik_salona_id, sal.lokacija_id, sal.prosjecna_ocjena
+    from (
+        select s.*, count(r.id) as c
         from salon s
         join salon_usluga su ON su.salon_id = s.id
         join zaposleni_salon_usluga zsu on su.id = zsu.salon_usluga_id
-        join rezervacija r ON r.zaposleni_salon_usluga_id = zsu.id
-        group by 1) as sal
-        order by sal.c desc
+        left join rezervacija r ON r.zaposleni_salon_usluga_id = zsu.id   
+        group by s.id
+    ) as sal
+    order by sal.c desc
     """, nativeQuery = true)
-    List<Salon>findPopularni(@Param("status_r") String statusR, @Param("status_s") String statusS);
+    List<Salon> findPopularni();
+
 
     Optional<Salon> findByNaziv(String naziv);
 
